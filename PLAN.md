@@ -38,7 +38,7 @@
 
 ## 4. 기술 종속성 및 요구사항
 
-- **운영체제**: Windows Server 2016 이상 또는 Windows 10/11
+- **운영체제**: Windows Server 2019 (최적화), Windows Server 2016 이상 또는 Windows 10/11
 - **실행 환경**: PowerShell 5.1 이상 (대부분의 Windows에 기본 내장)
 - **실행 권한**: 대부분의 진단 항목은 시스템 설정을 조회해야 하므로 **관리자 권한(Run as Administrator)** 으로 실행해야 합니다.
 - **PowerShell 실행 정책**: 로컬 스크립트 실행을 위해 `Set-ExecutionPolicy RemoteSigned` 정책 설정이 필요합니다.
