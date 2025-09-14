@@ -94,6 +94,31 @@ function Configure-VulnerableShare {
     }
 }
 
+function Configure-VulnerableCgiDirectory {
+    Write-Host "Configuring vulnerable CGI directory for W-12..."
+    try {
+        $cgiPath = "C:\inetpub\scripts"
+
+        # Create the directory if it doesn't exist
+        if (-not (Test-Path $cgiPath)) {
+            New-Item -Path $cgiPath -Type Directory -Force | Out-Null
+            Write-Host "  - Created directory: $cgiPath"
+        } else {
+            Write-Host "  - Directory already exists: $cgiPath"
+        }
+
+        # Grant Everyone Write access
+        $acl = Get-Acl $cgiPath
+        $accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule("Everyone", "Write", "ContainerInherit, ObjectInherit", "None", "Allow")
+        $acl.AddAccessRule($accessRule)
+        Set-Acl $cgiPath $acl
+        Write-Host "  - Granted 'Everyone' Write access to $cgiPath."
+
+    } catch {
+        Write-Error "Failed to configure vulnerable CGI directory: $_"
+    }
+}
+
 function Install-PowerShellModules {
     Write-Host "Installing required PowerShell modules..."
     try {
@@ -175,6 +200,8 @@ try {
 Configure-FtpSite
 
 Configure-VulnerableShare
+
+Configure-VulnerableCgiDirectory
 
 Install-PowerShellModules
 
