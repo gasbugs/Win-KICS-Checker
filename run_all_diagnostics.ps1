@@ -270,6 +270,12 @@ $allResultsJson | Set-Content $reportFilePath -Encoding UTF8
 
 Write-Host "`nFull report saved to: $($reportFilePath)"
 
+# Save latest JSON report
+$latestReportFileName = "diagnostic_report_latest_$($ComputerName).json"
+$latestReportFilePath = Join-Path $reportDir $latestReportFileName
+$allResultsJson | Set-Content $latestReportFilePath -Encoding UTF8
+Write-Host "Latest JSON report saved to: $($latestReportFilePath)"
+
 # Save results to a CSV file
 $csvReportFileName = "diagnostic_report_$(Get-Date -Format 'yyyyMMdd_HHmmss')_$($ComputerName).csv"
 $csvReportFilePath = Join-Path $reportDir $csvReportFileName
@@ -278,6 +284,12 @@ $csvReportFilePath = Join-Path $reportDir $csvReportFileName
 if ($processedResultsForCsv) {
     $processedResultsForCsv | ConvertTo-Csv -NoTypeInformation | Set-Content $csvReportFilePath -Encoding UTF8
     Write-Host "Full report saved to: $($csvReportFilePath)"
+
+    # Save latest CSV report
+    $latestCsvReportFileName = "diagnostic_report_latest_$($ComputerName).csv"
+    $latestCsvReportFilePath = Join-Path $reportDir $latestCsvReportFileName
+    $processedResultsForCsv | ConvertTo-Csv -NoTypeInformation | Set-Content $latestCsvReportFilePath -Encoding UTF8
+    Write-Host "Latest CSV report saved to: $($latestCsvReportFilePath)"
 } else {
     Write-Warning "No results to convert to CSV. CSV file not generated."
 }
@@ -323,5 +335,11 @@ $summaryObject = [PSCustomObject]@{
 
 $summaryObject | ConvertTo-Csv -NoTypeInformation | Set-Content $summaryReportFilePath -Encoding UTF8
 Write-Host "Summary report saved to: $($summaryReportFilePath)"
+
+# Save latest Summary CSV report
+$latestSummaryReportFileName = "diagnostic_summary_latest_$($ComputerName).csv"
+$latestSummaryReportFilePath = Join-Path $reportDir $latestSummaryReportFileName
+$summaryObject | ConvertTo-Csv -NoTypeInformation | Set-Content $latestSummaryReportFilePath -Encoding UTF8
+Write-Host "Latest Summary report saved to: $($latestSummaryReportFilePath)"
 
 Write-Host "Script finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
