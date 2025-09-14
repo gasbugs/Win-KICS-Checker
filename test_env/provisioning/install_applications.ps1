@@ -187,6 +187,8 @@ function Verify-Installation {
 
 # --- Main Script Execution ---
 
+Install-PowerShellModules
+
 Configure-WinRM
 
 Install-WindowsFeatures -FeatureNames @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "Telnet-Client")
@@ -205,7 +207,5 @@ Configure-VulnerableShare
 Configure-VulnerableCgiDirectory
 
 Configure-VulnerableParentPathAccess
-
-Install-PowerShellModules
 
 Verify-Installation
