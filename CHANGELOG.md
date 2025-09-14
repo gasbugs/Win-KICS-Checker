@@ -1,3 +1,13 @@
+### 21. 프로비저닝 스크립트 분리 및 WebDAV 설정 추가 (2025-09-14)
+
+*   **프로비저닝 스크립트 분리:**
+    *   **내용:** 기존 `install_applications.ps1` 파일을 `install_features.ps1` (기본 기능 설치)와 `configure_vulnerabilities.ps1` (취약점 환경 구성) 두 개의 스크립트로 분리하여 역할과 책임을 명확히 했습니다.
+    *   **Vagrantfile 수정:** `Vagrantfile`이 새로운 두 스크립트를 순서대로 실행하여 프로비저닝하도록 수정했습니다.
+*   **WebDAV 기능 추가:**
+    *   **내용:** 사용자의 요청에 따라, `Web-DAV-Publishing` 기능을 취약점 구성 스크립트(`configure_vulnerabilities.ps1`)에 추가하여 테스트 환경에 WebDAV가 활성화되도록 했습니다.
+*   **FTP 테스트 파일 생성:**
+    *   **내용:** FTP 진단 테스트를 위해 `configure_vulnerabilities.ps1` 스크립트 실행 시 FTP 루트 디렉토리에 테스트 파일을 생성하는 `Configure-FtpTestFile` 함수를 추가했습니다.
+
 ### 20. IIS 핸들러 및 진단 로직 수정 (2025-09-14)
 
 *   **IIS 핸들러 설정 스크립트 개선 (`install_applications.ps1`):**

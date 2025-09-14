@@ -1,41 +1,13 @@
 <#
 .SYNOPSIS
-    This script provisions a Windows Server for security diagnostics testing.
-    It performs the following actions:
-    1. Configures WinRM for HTTPS communication.
-    2. Installs required Windows Features (IIS, FTP, SNMP, DNS).
-    3. Creates a default FTP site for testing.
-    4. Installs necessary PowerShell modules (PowerShellGet, IISAdministration).
-    5. Verifies the installation and status of all components.
+    This script configures a Windows Server with a vulnerable environment for security diagnostics testing.
+    It should be run after install_features.ps1.
 #>
 
 # Set script-level error action to stop on terminating errors
 $ErrorActionPreference = 'Stop'
 
 # --- Function Definitions ---
-
-function Configure-WinRM {
-    Write-Host "Configuring WinRM for HTTPS..."
-    try {
-        # Check if HTTPS listener already exists
-        $httpsListener = winrm enumerate winrm/config/listener | Select-String "Transport = HTTPS"
-        if ($httpsListener) {
-            Write-Host "  - WinRM HTTPS listener already configured. Skipping."
-            return
-        }
-
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $url = "https://raw.githubusercontent.com/ansible/ansible-documentation/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
-        $file = Join-Path $env:TEMP "ConfigureRemotingForAnsible.ps1"
-
-        (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
-        powershell.exe -ExecutionPolicy Bypass -File $file -ErrorAction Stop
-        Write-Host "WinRM configured successfully."
-    } catch {
-        Write-Error "Failed to configure WinRM: $_"
-        exit 1
-    }
-}
 
 function Install-WindowsFeatures {
     param(
@@ -69,6 +41,21 @@ function Configure-FtpSite {
         Write-Host "Default FTP site created successfully."
     } catch {
         Write-Error "Failed to configure FTP site: $_"
+    }
+}
+
+function Configure-FtpTestFile {
+    Write-Host "Creating a test file in the FTP root directory..."
+    try {
+        $ftpRoot = "C:\inetpub\ftproot"
+        if (Test-Path $ftpRoot) {
+            "This is a test file created for FTP diagnostics." | Out-File -FilePath (Join-Path $ftpRoot "ftp_test_file.txt") -Encoding UTF8 -Force
+            Write-Host "  - Successfully created 'ftp_test_file.txt' in '$ftpRoot'."
+        } else {
+            Write-Warning "  - FTP root directory '$ftpRoot' not found. Skipping test file creation."
+        }
+    } catch {
+        Write-Error "Failed to create FTP test file: $_"
     }
 }
 
@@ -199,70 +186,6 @@ function Configure-VulnerableParentPathAccess {
     }
 }
 
-function Install-PowerShellModules {
-    Write-Host "Installing required PowerShell modules..."
-    try {
-        # Ensure PowerShellGet is available
-        if (-not (Get-Module -ListAvailable -Name PowerShellGet)) {
-            Write-Host "  - PowerShellGet not found. Installing..."
-            Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-            Install-Module -Name PowerShellGet -Force -AllowClobber
-            Write-Warning "PowerShellGet was installed. Please re-run this script in a new PowerShell session."
-            exit
-        }
-
-        # Install IISAdministration
-        if (-not (Get-Module -ListAvailable -Name IISAdministration)) {
-            Write-Host "  - Installing IISAdministration module..."
-            Install-Module -Name IISAdministration -Repository PSGallery -Force -Scope AllUsers
-        } else {
-            Write-Host "  - IISAdministration module is already installed."
-        }
-        Import-Module IISAdministration -ErrorAction SilentlyContinue
-    } catch {
-        Write-Error "Failed to install PowerShell modules: $_"
-    }
-}
-
-function Verify-Installation {
-    Write-Host "================================================"
-    Write-Host "Verifying installation status..."
-    Write-Host "================================================"
-
-    $features = @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS")
-    foreach ($featureName in $features) {
-        $feature = Get-WindowsFeature -Name $featureName
-        Write-Host "$($feature.DisplayName) Installed: $($feature.Installed)"
-        if ($feature.Installed) {
-            $serviceName = switch ($featureName) {
-                "Web-Server" { "W3SVC" }
-                "Web-Ftp-Server" { "FTPSVC" }
-                "SNMP-Service" { "SNMP" }
-                "DNS" { "DNS" }
-            }
-            if ($serviceName) {
-                $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
-                if ($service) {
-                    Write-Host "  - Service '$($serviceName)' Status: $($service.Status)"
-                } else {
-                    Write-Host "  - Service '$($serviceName)' Status: Not Found"
-                }
-            }
-        }
-    }
-    
-    $iisAdminModule = Get-Module -ListAvailable -Name IISAdministration
-    if ($iisAdminModule) {
-        Write-Host "IISAdministration Module Installed: True (Version: $($iisAdminModule.Version))"
-    } else {
-        Write-Host "IISAdministration Module Installed: False"
-    }
-    
-    Write-Host "================================================"
-    Write-Host "Verification complete."
-    Write-Host "================================================"
-}
-
 function Configure-AppCmdHandler {
     Write-Host "Configuring IIS handlers for all websites..."
     try {
@@ -348,65 +271,13 @@ function Configure-AppCmdHandler {
         Write-Error "Failed to configure IIS handlers: $_"
     }
 }
-    <# Configure-AppCmdHandler - IIS .asa 매핑 제거 스크립트
-    # 이 스크립트는 모든 IIS 웹사이트에서 .asa 확장자에 대한 처리기 매핑을 제거합니다.
-    # 관리자 권한으로 PowerShell에서 실행해야 합니다.
-
-    # IIS 관리 모듈 가져오기
-    Import-Module WebAdministration
-
-    # --- 설정 영역 ---
-    # 특정 사이트만 대상으로 하려면: $targetSiteName = "Default Web Site"
-    # 모든 사이트를 대상으로 하려면: $targetSiteName = "*"
-    $targetSiteName = "*"
-    # -----------------
-
-    if ($targetSiteName -eq "*") {
-        $sitesToProcess = Get-Website
-        Write-Host "모든 웹 사이트를 대상으로 .asa 매핑 제거를 시도합니다." -ForegroundColor Yellow
-    } else {
-        $sitesToProcess = Get-Website | Where-Object { $_.Name -eq $targetSiteName }
-        Write-Host "'$targetSiteName' 사이트를 대상으로 .asa 매핑 제거를 시도합니다." -ForegroundColor Yellow
-    }
-
-    foreach ($site in $sitesToProcess) {
-        $siteName = $site.Name
-        $handlerPath = "IIS:\Sites\$siteName"
-
-        # .asa 확장자에 대한 처리기 매핑 찾기
-        $asaHandler = Get-WebConfiguration -pspath $handlerPath -filter "system.webServer/handlers/add[@path='*.asa']"
-        
-        if ($asaHandler) {
-            Write-Host "[$siteName] 사이트에서 .asa 매핑을 발견하여 제거합니다."
-            
-            # .asa 매핑 제거
-            Remove-WebConfigurationProperty -pspath $handlerPath -filter "system.webServer/handlers" -name "." -atElement @{path='*.asa'}
-            
-            Write-Host "[$siteName] 사이트의 .asa 매핑이 성공적으로 제거되었습니다." -ForegroundColor Green
-        } else {
-            Write-Host "[$siteName] 사이트에는 제거할 .asa 매핑이 없습니다."
-        }
-    }
-
-    Write-Host "--- 조치 완료 ---" -ForegroundColor Cyan
-    #>
-
 
 # --- Main Script Execution ---
-Install-PowerShellModules
-
-Configure-WinRM
-
-Install-WindowsFeatures -FeatureNames @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "Telnet-Client", "Web-ASP", "Web-Mgmt-Tools")
-
-# Set W3SVC to start automatically
-try {
-    Set-Service -Name W3SVC -StartupType Automatic
-} catch {
-    Write-Warning "Could not set W3SVC startup type. A reboot might be required after feature installation."
-}
+Install-WindowsFeatures -FeatureNames @("Web-DAV-Publishing")
 
 Configure-FtpSite
+
+Configure-FtpTestFile
 
 Create-DefaultIisWebsite
 
@@ -417,5 +288,3 @@ Configure-VulnerableCgiDirectory
 Configure-AppCmdHandler
 
 Configure-VulnerableParentPathAccess
-
-Verify-Installation
