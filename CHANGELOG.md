@@ -4,6 +4,21 @@
 
 ## 변경 사항 요약
 
+### 18. 진단 스크립트 개선 및 보고서 관리 (2025-09-14)
+
+*   **진단 결과 요약 CSV 파일 추가:**
+    *   **내용:** `run_all_diagnostics.ps1` 스크립트 실행 시, 진단 결과 요약 정보(취약, 양호, 수동 확인 필요, 해당 없음, 오류 항목 수)를 포함하는 별도의 CSV 파일을 `reports` 디렉토리에 생성하도록 기능을 추가했습니다.
+*   **TelnetClient 기능 설치 이름 수정:**
+    *   **문제:** `test_env/provisioning/install_applications.ps1`에서 TelnetClient 기능 설치 시 잘못된 이름으로 인해 오류가 발생했습니다.
+    *   **해결책:** `Install-WindowsFeatures` cmdlet에 사용되는 TelnetClient의 올바른 기능 이름인 `Telnet-Client`로 수정했습니다.
+*   **보고서 파일 관리 로직 변경:**
+    *   **문제:** 이전에는 `run_all_diagnostics.ps1` 실행 시 `reports` 디렉토리의 이전 보고서 파일을 삭제하도록 설정되어 있었습니다. 사용자의 요청에 따라 로컬 파일 삭제 로직을 제거했습니다.
+    *   **해결책:** `run_all_diagnostics.ps1`에서 이전 보고서 파일을 삭제하는 로직을 제거했습니다. 이제 `reports` 디렉토리의 모든 진단 보고서 파일은 기본적으로 Git에 의해 무시됩니다. 특정 보고서를 Git에 포함하려면 수동으로 `git add -f <file>` 명령을 사용해야 합니다.
+*   **JSON 파싱 견고성 개선:**
+    *   **문제:** `run_all_diagnostics.ps1`에서 `Invoke-Command`의 JSON 출력 처리 중 `인덱스가 배열 범위를 벗어났습니다` 오류가 간헐적으로 발생했습니다.
+    *   **해결책:** `Invoke-Command`의 출력을 `ConvertFrom-Json`으로 파싱하기 전에 단일 문자열로 명시적으로 처리하여 JSON 파싱의 견고성을 향상시켰습니다.
+
+
 ### 17. 진단 스크립트 요약 기능 추가 및 테스트 환경 개선 (2025-09-14)
 
 *   **진단 결과 요약 기능 추가:**
