@@ -190,7 +190,9 @@ if ($session) {
 
 # Execute the combined script content on the target computer
 try {
-    $scriptOutputJson = Invoke-Command @invokeCommandParams
+    $scriptOutputRaw = Invoke-Command @invokeCommandParams
+    # Ensure $scriptOutputRaw is treated as a single string for ConvertFrom-Json
+    $scriptOutputJson = ($scriptOutputRaw | Out-String)
     $allResults = $scriptOutputJson | ConvertFrom-Json -ErrorAction Stop
     $processedResultsForCsv = @()
     foreach ($result in $allResults) {
