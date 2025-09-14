@@ -18,6 +18,13 @@
     *   **문제:** `run_all_diagnostics.ps1`에서 `Invoke-Command`의 JSON 출력 처리 중 `인덱스가 배열 범위를 벗어났습니다` 오류가 간헐적으로 발생했습니다.
     *   **해결책:** `Invoke-Command`의 출력을 `ConvertFrom-Json`으로 파싱하기 전에 단일 문자열로 명시적으로 처리하여 JSON 파싱의 견고성을 향상시켰습니다.
 
+### 19. W-13 취약점 구성 개선 (2025-09-14)
+
+*   **문제:** `test_env/provisioning/install_applications.ps1` 스크립트에서 W-13 (IIS Parent Path Access Prohibition) 취약점 구성 시, `Default FTP Site`에 잘못된 설정을 시도하고 `system.webServer/asp` 섹션 잠금 문제로 인해 `Default Web Site`에 대한 설정도 실패했습니다.
+*   **해결책:**
+    *   `install_applications.ps1` 스크립트에서 `Default FTP Site`에 대한 `enableParentPaths` 설정을 건너뛰도록 수정했습니다.
+    *   `system.webServer/asp` 섹션을 전역적으로 잠금 해제하는 로직을 추가하여 `Default Web Site`에 대한 `enableParentPaths` 설정이 성공적으로 이루어지도록 개선했습니다.
+
 
 ### 17. 진단 스크립트 요약 기능 추가 및 테스트 환경 개선 (2025-09-14)
 

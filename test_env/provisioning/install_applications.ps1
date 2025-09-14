@@ -17,6 +17,13 @@ $ErrorActionPreference = 'Stop'
 function Configure-WinRM {
     Write-Host "Configuring WinRM for HTTPS..."
     try {
+        # Check if HTTPS listener already exists
+        $httpsListener = winrm enumerate winrm/config/listener | Select-String "Transport = HTTPS"
+        if ($httpsListener) {
+            Write-Host "  - WinRM HTTPS listener already configured. Skipping."
+            return
+        }
+
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $url = "https://raw.githubusercontent.com/ansible/ansible-documentation/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
         $file = Join-Path $env:TEMP "ConfigureRemotingForAnsible.ps1"
@@ -62,6 +69,22 @@ function Configure-FtpSite {
         Write-Host "Default FTP site created successfully."
     } catch {
         Write-Error "Failed to configure FTP site: $_"
+    }
+}
+
+function Create-DefaultIisWebsite {
+    Write-Host "Ensuring Default Web Site exists..."
+    try {
+        if (-not (Get-Website -Name "Default Web Site" -ErrorAction SilentlyContinue)) {
+            # Create the default website if it doesn't exist
+            # This assumes the Web-Server feature is already installed
+            New-Website -Name "Default Web Site" -PhysicalPath "C:\inetpub\wwwroot" -Port 80 -Force -ErrorAction Stop
+            Write-Host "  - Default Web Site created successfully."
+        } else {
+            Write-Host "  - Default Web Site already exists."
+        }
+    } catch {
+        Write-Error "Failed to create Default Web Site: $_"
     }
 }
 
@@ -117,6 +140,62 @@ function Configure-VulnerableCgiDirectory {
 
     } catch {
         Write-Error "Failed to configure vulnerable CGI directory: $_"
+    }
+}
+
+function Configure-VulnerableParentPathAccess {
+    Write-Host "Configuring vulnerable parent path access for W-13..."
+    try {
+        # Ensure WebAdministration module is loaded
+        if (-not (Get-Module -ListAvailable -Name WebAdministration)) {
+            Write-Host "  - WebAdministration module not found. IIS might not be installed or module not available."
+            return
+        }
+        Import-Module WebAdministration -ErrorAction Stop
+        Write-Host "  - WebAdministration module loaded."
+
+        Write-Host "  - Attempting to globally unlock 'system.webServer/asp' section..."
+        try {
+            Set-WebConfiguration -filter "system.webServer/asp" -metadata overrideMode -value "Allow" -ErrorAction Stop
+            Write-Host "    - Successfully globally unlocked 'system.webServer/asp' section."
+        } catch {
+            Write-Warning "  - Could not globally unlock 'system.webServer/asp' section: $($_.Exception.Message)"
+        }
+
+        $websites = Get-WebSite -ErrorAction SilentlyContinue
+        if ($null -eq $websites) {
+            Write-Host "  - No IIS websites found to configure."
+            return
+        }
+        Write-Host "  - Found $($websites.Count) IIS websites."
+
+        foreach ($site in $websites) {
+            Write-Host "  - Attempting to configure site: $($site.Name)"
+            if ($site.Name -eq "Default FTP Site") {
+                Write-Host "  - Skipping FTP site: $($site.Name) as parent path access is not applicable."
+                continue
+            }
+            
+            try {
+                # Check current state before attempting to set
+                $currentAspConfig = Get-WebConfigurationProperty -PSPath "IIS:\Sites\$($site.Name)" -Filter 'system.webServer/asp' -Name '*' -ErrorAction SilentlyContinue
+                Write-Host "    - Current EnableParentPaths for $($site.Name): $($currentAspConfig.EnableParentPaths)"
+
+                # Enable EnableParentPaths for the ASP configuration of the site
+                Set-WebConfigurationProperty -PSPath "IIS:\Sites\$($site.Name)" -Filter 'system.webServer/asp' -Name 'enableParentPaths' -Value $true -ErrorAction Stop
+                Write-Host "    - Successfully set EnableParentPaths to $true for site: $($site.Name)"
+
+                # Verify after setting
+                $newAspConfig = Get-WebConfigurationProperty -PSPath "IIS:\Sites\$($site.Name)" -Filter 'system.webServer/asp' -Name '*' -ErrorAction SilentlyContinue
+                Write-Host "    - Verified EnableParentPaths for $($site.Name) is now: $($newAspConfig.EnableParentPaths)"
+
+            } catch {
+                Write-Warning "  - Could not enable parent path access for site $($site.Name): $($_.Exception.Message)"
+            }
+        }
+        Write-Host "Vulnerable parent path access configured successfully."
+    } catch {
+        Write-Error "Failed to configure vulnerable parent path access: $_"
     }
 }
 
@@ -201,6 +280,8 @@ try {
 }
 
 Configure-FtpSite
+
+Create-DefaultIisWebsite
 
 Configure-VulnerableShare
 
