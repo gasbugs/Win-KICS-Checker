@@ -95,6 +95,7 @@ function Configure-VulnerableShare {
 }
 
 function Configure-VulnerableCgiDirectory {
+
     Write-Host "Configuring vulnerable CGI directory for W-12..."
     try {
         $cgiPath = "C:\inetpub\scripts"
@@ -202,6 +203,8 @@ Configure-FtpSite
 Configure-VulnerableShare
 
 Configure-VulnerableCgiDirectory
+
+Configure-VulnerableParentPathAccess
 
 Install-PowerShellModules
 
