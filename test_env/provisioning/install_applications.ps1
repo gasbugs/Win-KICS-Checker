@@ -163,7 +163,7 @@ function Verify-Installation {
 
 Configure-WinRM
 
-Install-WindowsFeatures -FeatureNames @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "TelnetClient")
+Install-WindowsFeatures -FeatureNames @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "Telnet-Client")
 
 # Set W3SVC to start automatically
 try {
