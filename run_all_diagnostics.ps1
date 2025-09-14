@@ -261,11 +261,6 @@ $reportDir = Join-Path $PSScriptRoot "reports"
 if (-not (Test-Path $reportDir)) {
     New-Item -ItemType Directory -Path $reportDir | Out-Null
 }
-
-# Clean up old reports, but keep .gitkeep
-Write-Host "Cleaning up old reports in $reportDir..."
-Get-ChildItem -Path $reportDir -File | Where-Object { $_.Name -ne ".gitkeep" } | Remove-Item -Force
-Write-Host "Old reports cleaned."
 $reportFileName = "diagnostic_report_$(Get-Date -Format 'yyyyMMdd_HHmmss')_$($ComputerName).json"
 $reportFilePath = Join-Path $reportDir $reportFileName
 
