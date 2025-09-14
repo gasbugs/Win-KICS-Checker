@@ -2,9 +2,9 @@
 /reports/*.csv
 /reports/*.json
 !/reports/.gitkeep
-!/reports/diagnostic_summary_*.csv
 !/reports/diagnostic_report_latest_*.json
 !/reports/diagnostic_report_latest_*.csv
+!/reports/diagnostic_summary_latest_*.csv
 
 # Vagrant test environment files
 /test_env/.vagrant/
