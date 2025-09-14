@@ -7,27 +7,10 @@
 # Set script-level error action to stop on terminating errors
 $ErrorActionPreference = 'Stop'
 
-# --- Function Definitions ---
+# Import ServerManager module for feature management cmdlets
+Import-Module ServerManager -ErrorAction SilentlyContinue
 
-function Install-WindowsFeatures {
-    param(
-        [string[]]$FeatureNames
-    )
-    
-    Write-Host "Installing Windows Features: $($FeatureNames -join ', ')..."
-    foreach ($feature in $FeatureNames) {
-        try {
-            if (-not (Get-WindowsFeature -Name $feature).Installed) {
-                Install-WindowsFeature -Name $feature -IncludeManagementTools -ErrorAction Stop
-                Write-Host "  - Successfully installed $feature."
-            } else {
-                Write-Host "  - $feature is already installed."
-            }
-        } catch {
-            Write-Error "Failed to install feature '$feature': $_"
-        }
-    }
-}
+# --- Function Definitions ---
 
 function Configure-FtpSite {
     Write-Host "Configuring default FTP site..."
@@ -272,12 +255,69 @@ function Configure-AppCmdHandler {
     }
 }
 
+function Configure-AnonymousFtp {
+    Write-Host "Configuring Anonymous FTP for W-27...";
+    try {
+        # Ensure WebAdministration module is loaded
+        if (-not (Get-Module -ListAvailable -Name WebAdministration)) {
+            Write-Host "  - WebAdministration module not found. IIS might not be installed or module not available.";
+            return;
+        }
+        Import-Module WebAdministration -ErrorAction Stop;
+
+        Write-Host "  - Enabling anonymous authentication for FTP on 'Default FTP Site'...";
+        Set-ItemProperty -Path 'IIS:\Sites\Default FTP Site' -Name 'ftpServer.security.authentication.anonymousAuthentication.enabled' -Value $true
+        Write-Host "  - Anonymous authentication for FTP enabled successfully on 'Default FTP Site'.";
+
+        Write-Host "  - Ensuring basic authentication element exists for FTP on 'Default FTP Site' before disabling...";
+        $basicAuthExists = Get-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST' -filter "system.ftpServer/security/authentication/basicAuthentication" -name "enabled" -Location "Default FTP Site" -ErrorAction SilentlyContinue;
+        if (-not $basicAuthExists) {
+            Write-Host "  - Basic authentication element not found, adding it...";
+            Add-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST' -filter "system.ftpServer/security/authentication" -name "." -value @{name="basicAuthentication"; enabled="false"} -Location "Default FTP Site" -ErrorAction Stop;
+            Write-Host "  - Basic authentication element added and disabled.";
+        } else {
+            Write-Host "  - Disabling basic authentication for FTP on 'Default FTP Site'...";
+            Set-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST' -filter "system.ftpServer/security/authentication/basicAuthentication" -name "enabled" -value "false" -Location "Default FTP Site" -ErrorAction Stop;
+            Write-Host "  - Basic authentication for FTP disabled successfully on 'Default FTP Site'.";
+        }
+
+    } catch {
+        Write-Error "Failed to configure Anonymous FTP: $_";
+    }
+}
+
+function Configure-VulnerableDnsZoneTransfer {
+    Write-Host "Configuring vulnerable DNS Zone Transfer for W-29..."
+    try {
+        # Ensure DNS Server module is loaded
+        if (-not (Get-Module -ListAvailable -Name DnsServer)) {
+            Write-Host "  - DnsServer module not found. DNS Server role might not be installed or module not available."
+            return
+        }
+        Import-Module DnsServer -ErrorAction Stop
+        Write-Host "  - DnsServer module loaded."
+
+        Add-DnsServerPrimaryZone -Name "lab.local" -ZoneFile "lab.local.dns"
+        Write-Host "  - Created primary DNS zone 'lab.local'."
+
+        # [2단계] 아래 명령어를 실행하여 영역 전송을 '모든 서버에 허용'으로 설정합니다.
+        Set-DnsServerPrimaryZone -Name "lab.local" -SecureSecondaries "TransferAnyServer"
+        Write-Host "  - Configured DNS Zone Transfer to 'TransferAnyServer' for zone 'lab.local'."
+
+        
+
+    } catch {
+        Write-Error "Failed to configure vulnerable DNS Zone Transfer: $_"
+    }
+}
+
 # --- Main Script Execution ---
-Install-WindowsFeatures -FeatureNames @("Web-DAV-Publishing")
 
 Configure-FtpSite
 
 Configure-FtpTestFile
+
+Configure-AnonymousFtp
 
 Create-DefaultIisWebsite
 
@@ -288,3 +328,6 @@ Configure-VulnerableCgiDirectory
 Configure-AppCmdHandler
 
 Configure-VulnerableParentPathAccess
+
+Configure-VulnerableDnsZoneTransfer
+

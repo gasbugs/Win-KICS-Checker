@@ -36,18 +36,36 @@ function Test-DNSZoneTransferSetting {
         }
 
         $vulnerableZones = @()
+        $manualCheckZones = @()
+        $manualCheckDetails = @()
+
         foreach ($zone in $zones) {
-            # Check Zone Transfer settings
-            # AllowZoneTransfer: 0 (None), 1 (To any server), 2 (To servers listed in NS records), 3 (To specific servers)
-            if ($zone.AllowZoneTransfer -eq 1) { # "To any server" is vulnerable
+            # Check Zone Transfer settings using SecureSecondaries property
+            # SecureSecondaries: 0 (None), 1 (ToAnyServer), 2 (ToServersListedInNsRecords), 3 (ToSpecificServers)
+            # Also check for the string "TransferAnyServer" if it's set directly
+            if ($zone.SecureSecondaries -eq 1 -or $zone.SecureSecondaries -eq "TransferAnyServer") { # ToAnyServer is vulnerable
                 $vulnerableZones += $zone.ZoneName
+            } elseif ($zone.SecureSecondaries -eq 3) { # ToSpecificServers
+                if (-not $zone.SecureSecondaries -or $zone.SecureSecondaries.Count -eq 0) {
+                    # This condition is unlikely to be met if SecureSecondaries is 3, as it implies specific servers are listed.
+                    # However, if it means no specific IPs are listed, it's not vulnerable.
+                } else {
+                    # Specific secondaries are listed, requires manual review to ensure they are authorized
+                    $manualCheckZones += $zone.ZoneName
+                    $manualCheckDetails += "Zone $($zone.ZoneName) allows zone transfer to specific servers: $($zone.SecureSecondaries -join ', '). Manual review required."
+                }
             }
+            # SecureSecondaries -eq 0 (None) and -eq 2 (ToServersListedInNsRecords) are considered good/secure by default
         }
 
         if ($vulnerableZones.Count -gt 0) {
             $result.Result = "Vulnerable"
             $result.Details = "DNS Zone Transfer is allowed to any server on the following zones: $($vulnerableZones -join ', '). It should be restricted."
-        } else {
+        } elseif ($manualCheckZones.Count -gt 0) {
+            $result.Result = "Manual Check Required"
+            $result.Details = ($manualCheckDetails -join "`n")
+        }
+         else {
             $result.Result = "Good"
             $result.Details = "DNS Zone Transfer is restricted or disabled on all detected DNS zones."
         }
