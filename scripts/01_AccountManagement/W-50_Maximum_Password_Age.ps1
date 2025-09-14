@@ -1,0 +1,63 @@
+<#
+.SYNOPSIS
+    Checks if the 'Maximum password age' policy is set to 90 days or less.
+
+.DESCRIPTION
+    This script verifies if the security policy 'Maximum password age'
+    is configured to 90 days (or 0 for never expires, which is vulnerable) or less.
+    It uses 'secedit /export' to retrieve the local security policy settings.
+
+.OUTPUTS
+    A JSON object indicating the check item, category, result, and details.
+#>
+
+function Test-W50MaximumPasswordAge {
+    [CmdletBinding()]
+    param()
+    
+    $checkItem = "W-50"
+    $category = "Account Management"
+    $result = "Good"
+    $details = ""
+    $maxRecommendedDays = 90
+    $maxRecommendedSeconds = $maxRecommendedDays * 24 * 60 * 60
+
+    try {
+        $tempFile = [System.IO.Path]::GetTempFileName()
+        secedit /export /cfg $tempFile /areas SECURITYPOLICY /quiet
+        $content = Get-Content $tempFile
+        Remove-Item $tempFile
+
+        $maximumPasswordAge = ($content | Select-String -Pattern "MaximumPasswordAge = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+
+        # A value of 0 means password never expires, which is vulnerable.
+        # If it's set, it's in seconds. So 90 days is 90 * 24 * 60 * 60 seconds.
+        if ($maximumPasswordAge -eq 0) {
+            $result = "Vulnerable"
+            $details = "The 'Maximum password age' policy is set to never expire (Current value: 0 seconds)."
+        } elseif ($maximumPasswordAge -le $maxRecommendedSeconds) {
+            $details = "The 'Maximum password age' policy is set to $($maximumPasswordAge / (24*60*60)) days (Recommended: <= $maxRecommendedDays days)."
+        } else {
+            $result = "Vulnerable"
+            $details = "The 'Maximum password age' policy is set to $($maximumPasswordAge / (24*60*60)) days, which is greater than the recommended $maxRecommendedDays days."
+        }
+    }
+    catch {
+        $result = "Error"
+        $details = "An error occurred while checking maximum password age policy: $($_.Exception.Message)"
+    }
+
+    $output = @{
+        CheckItem = $checkItem
+        Category = $category
+        Result = $result
+        Details = $details
+        Timestamp = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+    }
+
+    # Convert to JSON and output
+    $output | ConvertTo-Json -Depth 4
+}
+
+# Execute the function
+Test-W50MaximumPasswordAge

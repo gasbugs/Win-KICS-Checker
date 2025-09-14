@@ -1,0 +1,15 @@
+# Generated diagnostic reports
+/reports/
+
+# Vagrant test environment files
+/test_env/.vagrant/
+
+# PowerShell files
+*.ps1xml
+
+# Windows thumbnail cache
+Thumbs.db
+Desktop.ini
+
+# VS Code
+.vscode/
