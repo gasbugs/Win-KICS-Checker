@@ -1,5 +1,5 @@
 # Generated diagnostic reports
-/reports/
+/reports/*
 
 # Vagrant test environment files
 /test_env/.vagrant/
