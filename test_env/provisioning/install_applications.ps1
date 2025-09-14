@@ -263,14 +263,141 @@ function Verify-Installation {
     Write-Host "================================================"
 }
 
+function Configure-AppCmdHandler {
+    Write-Host "Configuring IIS handlers for all websites..."
+    try {
+        # Ensure WebAdministration module is loaded
+        if (-not (Get-Module -ListAvailable -Name WebAdministration)) {
+            Write-Host "  - WebAdministration module not found. IIS might not be installed or module not available."
+            return
+        }
+        Import-Module WebAdministration -ErrorAction Stop
+
+        $sites = Get-Website
+        if ($null -eq $sites) {
+            Write-Host "  - No IIS websites found to configure."
+            return
+        }
+        Write-Host "  - Found $($sites.Count) sites."
+
+        # ASA handler mapping properties
+        $asaHandlerProperties = @{
+            name            = "asa-handler-vuln"
+            path            = "*.asa"
+            verb            = "*"
+            modules         = "IsapiModule"
+            scriptProcessor = "$env:windir\system32\inetsrv\asp.dll"
+            resourceType    = "File"
+            requireAccess   = "Script"
+        }
+
+        # ASAX handler mapping properties
+        $asaxHandlerProperties = @{
+            name            = "asax-handler-vuln"
+            path            = "*.asax"
+            verb            = "*"
+            modules         = "IsapiModule"
+            scriptProcessor = "$env:windir\system32\inetsrv\asp.dll"
+            resourceType    = "File"
+            requireAccess   = "Script"
+        }
+
+        foreach ($site in $sites) {
+            $targetSiteName = $site.Name
+            
+            # Check if the site has HTTP bindings
+            $isHttpSite = $false
+            foreach($binding in $site.bindings.collection) {
+                if($binding.protocol -like "http*") {
+                    $isHttpSite = $true
+                    break
+                }
+            }
+
+            if (-not $isHttpSite) {
+                Write-Host "--- Skipping non-HTTP site: $targetSiteName ---"
+                continue
+            }
+
+            Write-Host "--- Configuring handlers for site: $targetSiteName ---"
+
+            # Remove existing handlers to prevent conflicts
+            $handlersToRemove = @("asa-handler-vuln", "asax-handler-vuln")
+            foreach ($handlerName in $handlersToRemove) {
+                $existingHandler = Get-WebConfiguration -pspath "IIS:\Sites\$targetSiteName" -filter "system.webServer/handlers/add[@name='$handlerName']" -ErrorAction SilentlyContinue
+                if ($existingHandler) {
+                    Write-Host "  - Removing existing handler mapping: $handlerName from $targetSiteName"
+                    Remove-WebConfigurationProperty -pspath "IIS:\Sites\$targetSiteName" -filter "system.webServer/handlers" -name "." -atElement @{name=$handlerName} -ErrorAction Stop
+                    Write-Host "  - Successfully removed handler mapping: $handlerName from $targetSiteName"
+                }
+            }
+
+            # Add .asa handler
+            Write-Host "  - Adding '.asa' handler mapping to '$targetSiteName' site."
+            Add-WebConfigurationProperty -pspath "IIS:\Sites\$targetSiteName" -filter "system.webServer/handlers" -name "." -value $asaHandlerProperties -ErrorAction Stop
+            Write-Host "  - '.asa' handler mapping added successfully to '$targetSiteName'."
+
+            # Add .asax handler
+            Write-Host "  - Adding '.asax' handler mapping to '$targetSiteName' site."
+            Add-WebConfigurationProperty -pspath "IIS:\Sites\$targetSiteName" -filter "system.webServer/handlers" -name "." -value $asaxHandlerProperties -ErrorAction Stop
+            Write-Host "  - '.asax' handler mapping added successfully to '$targetSiteName'."
+        }
+
+        Write-Host "IIS handlers configured for all applicable sites successfully."
+    } catch {
+        Write-Error "Failed to configure IIS handlers: $_"
+    }
+}
+    <# Configure-AppCmdHandler - IIS .asa 매핑 제거 스크립트
+    # 이 스크립트는 모든 IIS 웹사이트에서 .asa 확장자에 대한 처리기 매핑을 제거합니다.
+    # 관리자 권한으로 PowerShell에서 실행해야 합니다.
+
+    # IIS 관리 모듈 가져오기
+    Import-Module WebAdministration
+
+    # --- 설정 영역 ---
+    # 특정 사이트만 대상으로 하려면: $targetSiteName = "Default Web Site"
+    # 모든 사이트를 대상으로 하려면: $targetSiteName = "*"
+    $targetSiteName = "*"
+    # -----------------
+
+    if ($targetSiteName -eq "*") {
+        $sitesToProcess = Get-Website
+        Write-Host "모든 웹 사이트를 대상으로 .asa 매핑 제거를 시도합니다." -ForegroundColor Yellow
+    } else {
+        $sitesToProcess = Get-Website | Where-Object { $_.Name -eq $targetSiteName }
+        Write-Host "'$targetSiteName' 사이트를 대상으로 .asa 매핑 제거를 시도합니다." -ForegroundColor Yellow
+    }
+
+    foreach ($site in $sitesToProcess) {
+        $siteName = $site.Name
+        $handlerPath = "IIS:\Sites\$siteName"
+
+        # .asa 확장자에 대한 처리기 매핑 찾기
+        $asaHandler = Get-WebConfiguration -pspath $handlerPath -filter "system.webServer/handlers/add[@path='*.asa']"
+        
+        if ($asaHandler) {
+            Write-Host "[$siteName] 사이트에서 .asa 매핑을 발견하여 제거합니다."
+            
+            # .asa 매핑 제거
+            Remove-WebConfigurationProperty -pspath $handlerPath -filter "system.webServer/handlers" -name "." -atElement @{path='*.asa'}
+            
+            Write-Host "[$siteName] 사이트의 .asa 매핑이 성공적으로 제거되었습니다." -ForegroundColor Green
+        } else {
+            Write-Host "[$siteName] 사이트에는 제거할 .asa 매핑이 없습니다."
+        }
+    }
+
+    Write-Host "--- 조치 완료 ---" -ForegroundColor Cyan
+    #>
+
 
 # --- Main Script Execution ---
-
 Install-PowerShellModules
 
 Configure-WinRM
 
-Install-WindowsFeatures -FeatureNames @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "Telnet-Client")
+Install-WindowsFeatures -FeatureNames @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "Telnet-Client", "Web-ASP", "Web-Mgmt-Tools")
 
 # Set W3SVC to start automatically
 try {
@@ -286,6 +413,8 @@ Create-DefaultIisWebsite
 Configure-VulnerableShare
 
 Configure-VulnerableCgiDirectory
+
+Configure-AppCmdHandler
 
 Configure-VulnerableParentPathAccess
 

@@ -14,6 +14,17 @@ $ErrorActionPreference = 'Continue'
 # Define project root (assuming this script is in the root)
 $PSScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
+# --- Log setup ---
+$logDir = Join-Path $PSScriptRoot "logs"
+if (-not (Test-Path $logDir)) {
+    New-Item -ItemType Directory -Path $logDir | Out-Null
+}
+$logFileName = "diagnostic_log_$(Get-Date -Format 'yyyyMMdd_HHmmss')_$($ComputerName).log"
+$logFilePath = Join-Path $logDir $logFileName
+Start-Transcript -Path $logFilePath
+# --- End Log setup ---
+
+
 Write-Host "Script started at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Write-Host "Project Root: $PSScriptRoot"
 Write-Host "Target Computer: ${ComputerName}:${Port}"
@@ -102,7 +113,7 @@ $diagnosticScripts = @(
     "scripts\02_ServiceManagement\W-65_Telnet_Security_Setting.ps1",
     "scripts\02_ServiceManagement\W-66_Remove_Unnecessary_ODBC_OLEDB.ps1",
     "scripts\02_ServiceManagement\W-67_Remote_Terminal_Connection_Timeout.ps1",
-    "scripts\02_ServiceManagement\W-68_Check_Suspicious_Scheduled_Tasks.ps1",
+    "scripts\02_ServiceManagement\W-68_Check_Suspicious_Scheduled_Tasks.ps1"
     "scripts\03_PatchManagement\W-32_Apply_Latest_Hot_Fix.ps1",
     "scripts\03_PatchManagement\W-33_Antivirus_Program_Update.ps1",
     "scripts\03_PatchManagement\W-69_System_Logging_Setting.ps1",
@@ -343,3 +354,17 @@ $summaryObject | ConvertTo-Csv -NoTypeInformation | Set-Content $latestSummaryRe
 Write-Host "Latest Summary report saved to: $($latestSummaryReportFilePath)"
 
 Write-Host "Script finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+
+Stop-Transcript
+
+# Mask password in the log file
+if ($Password -and (Test-Path $logFilePath)) {
+    try {
+        $logContent = Get-Content $logFilePath -Raw
+        $maskedContent = $logContent.Replace($Password, '********')
+        Set-Content -Path $logFilePath -Value $maskedContent -Encoding UTF8
+        Write-Host "Password has been masked in the log file: $logFilePath"
+    } catch {
+        Write-Warning "Could not mask password in log file: $($_.Exception.Message)"
+    }
+}

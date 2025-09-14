@@ -5,6 +5,9 @@
 !/reports/diagnostic_report_latest_*.csv
 !/reports/diagnostic_summary_latest_*.csv
 
+# Log files
+/logs/
+
 # Vagrant test environment files
 /test_env/.vagrant/
 
