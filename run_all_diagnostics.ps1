@@ -306,4 +306,20 @@ Write-Host "--------------------------"
 Write-Host "Total Checks            : $($allResults.Count)"
 Write-Host "========================="
 
+# Save summary to a CSV file
+$summaryReportFileName = "diagnostic_summary_$(Get-Date -Format 'yyyyMMdd_HHmmss')_$($ComputerName).csv"
+$summaryReportFilePath = Join-Path $reportDir $summaryReportFileName
+
+$summaryObject = [PSCustomObject]@{
+    Vulnerable = $summary.Vulnerable;
+    Good = $summary.Good;
+    ManualCheckRequired = $summary.'Manual Check Required';
+    NotApplicable = $summary.'Not Applicable';
+    Error = $summary.Error;
+    TotalChecks = $allResults.Count
+}
+
+$summaryObject | ConvertTo-Csv -NoTypeInformation | Set-Content $summaryReportFilePath -Encoding UTF8
+Write-Host "Summary report saved to: $($summaryReportFilePath)"
+
 Write-Host "Script finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
