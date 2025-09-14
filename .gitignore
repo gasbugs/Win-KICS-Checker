@@ -1,6 +1,8 @@
 # Generated diagnostic reports
 /reports/*
 !/reports/.gitkeep
+!/reports/diagnostic_report_20250914_092201_127.0.0.1.csv
+!/reports/diagnostic_report_20250914_092201_127.0.0.1.json
 
 # Vagrant test environment files
 /test_env/.vagrant/
