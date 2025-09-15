@@ -23,14 +23,11 @@ function Test-W38ScreensaverSetting {
     $maxIdleTimeSeconds = 600 # 10 minutes
 
     try {
-        $tempFile = [System.IO.Path]::GetTempFileName()
-        secedit /export /cfg $tempFile /areas SECURITYPOLICY /quiet
-        $content = Get-Content $tempFile
-        Remove-Item $tempFile
+        $screensaverSettings = Get-ItemProperty -Path "HKCU:\Control Panel\Desktop" | Select-Object ScreenSaveActive, ScreenSaverIsSecure, ScreenSaveTimeOut
 
-        $screenSaverIsSecure = ($content | Select-String -Pattern "ScreenSaverIsSecure = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
-        $screenSaverTimeout = ($content | Select-String -Pattern "ScreenSaverTimeout = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
-        $screenSaveActive = ($content | Select-String -Pattern "ScreenSaveActive = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $screenSaveActive = $screensaverSettings.ScreenSaveActive -as [int]
+        $screenSaverIsSecure = $screensaverSettings.ScreenSaverIsSecure -as [int]
+        $screenSaverTimeout = $screensaverSettings.ScreenSaveTimeOut -as [int]
 
         $isScreensaverEnabled = ($screenSaveActive -eq 1)
         $isTimeoutGood = ($screenSaverTimeout -le $maxIdleTimeSeconds)

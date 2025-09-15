@@ -21,40 +21,21 @@ function Test-W44AllowRemovableMediaFormatEject {
     $details = ""
 
     try {
-        $tempFile = [System.IO.Path]::GetTempFileName()
-        secedit /export /cfg $tempFile /areas SECURITYPOLICY /quiet
-        $content = Get-Content $tempFile
-        Remove-Item $tempFile
+        $allocateDASDValue = $null
+        try {
+            $regValue = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "allocateDASD" -ErrorAction Stop
+            $allocateDASDValue = $regValue.allocateDASD
+        } catch {
+            # If the registry value is not found, it defaults to 1 (all users can allocate)
+            $allocateDASDValue = 1
+        }
 
-        $seFormatVolumePrivilegeLine = $content | Select-String -Pattern "SeFormatVolumePrivilege = "
-        if ($seFormatVolumePrivilegeLine) {
-            $assignedSids = $seFormatVolumePrivilegeLine.ToString().Split('=')[1].Trim().Split(',')
-            $assignedNames = @()
-
-            foreach ($sid in $assignedSids) {
-                try {
-                    $assignedNames += (New-Object System.Security.Principal.SecurityIdentifier($sid)).Translate([System.Security.Principal.NTAccount]).Value
-                } catch {
-                    $assignedNames += $sid # Keep SID if translation fails
-                }
-            }
-
-            $unnecessaryAccounts = @()
-            foreach ($name in $assignedNames) {
-                if (-not ($name -like "*\Administrators")) {
-                    $unnecessaryAccounts += $name
-                }
-            }
-
-            if ($unnecessaryAccounts.Count -eq 0) {
-                $details = "Only Administrators are allowed to format and eject removable media. Assigned: $($assignedNames -join ', ')."
-            } else {
-                $result = "Vulnerable"
-                $details = "Unnecessary accounts/groups are allowed to format and eject removable media. Assigned: $($assignedNames -join ', '). Unnecessary: $($unnecessaryAccounts -join ', ')."
-            }
+        if ($allocateDASDValue -eq 0) {
+            $result = "Good"
+            $details = "Only Administrators are allowed to format and eject removable media (allocateDASD is 0)."
         } else {
             $result = "Vulnerable"
-            $details = "'Devices: Allow users to format and eject removable media' policy (SeFormatVolumePrivilege) not found in security policy export."
+            $details = "All users are allowed to format and eject removable media (allocateDASD is $allocateDASDValue). Recommended: 0 (Administrators only)."
         }
     }
     catch {
@@ -67,7 +48,6 @@ function Test-W44AllowRemovableMediaFormatEject {
         Category = $category
         Result = $result
         Details = $details
-        AssignedUsers = $assignedNames # Include assigned users for review
         Timestamp = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
     }
 

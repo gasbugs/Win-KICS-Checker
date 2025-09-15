@@ -27,7 +27,7 @@ function Test-W54DisableAnonymousSIDNameTranslation {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $lsaAnonymousNameLookup = ($content | Select-String -Pattern "LSAAnonymousNameLookup = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $lsaAnonymousNameLookup = ($content | Select-String -Pattern "LSAAnonymousNameLookup" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         if ($lsaAnonymousNameLookup -eq 0) {
             $details = "The 'Network access: Allow anonymous SID/name translation' policy is disabled."

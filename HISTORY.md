@@ -41,6 +41,8 @@
 ## 5. 최근 진행 기록 (Recent Progress)
 
 ### 5.1 프로젝트 구조 개선 (Project Structure Improvement)
+- **진단 스크립트 분석 및 W-35 해결:** `W-32`, `W-33`, `W-34` 스크립트의 "Manual Check Required" 동작을 확인하고, `W-35` 스크립트의 "원격 레지스트리 서비스"를 중지/비활성화하여 "Good" 상태로 변경했습니다.
+- **W-36 로직 개선:** Windows Defender 서비스 실행 여부에 따라 W-36 항목이 "양호"로 보고되도록 스크립트 로직을 개선했습니다.
 - **주요 변경 사항:** 스크립트 파일 경로 및 파일명에 포함된 한글 문자로 인한 인코딩 문제를 해결하기 위해 모든 디렉토리 및 스크립트 파일명을 영문(ASCII)으로 변경했습니다. 자세한 내용은 `CHANGELOG.md`를 참조하십시오.
 
 ### 5.2 개별 진단 스크립트 개발 현황 업데이트 (Individual Scripts Development Status Update)

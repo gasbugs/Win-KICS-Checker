@@ -22,11 +22,11 @@ function Test-W40ForceShutdownRemoteSystem {
 
     try {
         $tempFile = [System.IO.Path]::GetTempFileName()
-        secedit /export /cfg $tempFile /areas SECURITYPOLICY /quiet
+        secedit /export /cfg $tempFile /quiet # Removed /areas SECURITYPOLICY as per user's last instruction
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $seRemoteShutdownPrivilegeLine = $content | Select-String -Pattern "SeRemoteShutdownPrivilege = "
+        $seRemoteShutdownPrivilegeLine = $content | Select-String -Pattern "SeRemoteShutdownPrivilege"
         if ($seRemoteShutdownPrivilegeLine) {
             $assignedSids = $seRemoteShutdownPrivilegeLine.ToString().Split('=')[1].Trim().Split(',')
             $assignedNames = @()
@@ -41,7 +41,9 @@ function Test-W40ForceShutdownRemoteSystem {
 
             $unnecessaryAccounts = @()
             foreach ($name in $assignedNames) {
-                if (-not ($name -like "*\Administrators")) {
+                # Check if the name is not Administrators group
+                # Assuming 'Administrators' is the only allowed group
+                if (-not ($name -like "*\\Administrators")) {
                     $unnecessaryAccounts += $name
                 }
             }

@@ -125,7 +125,7 @@ Install-PowerShellModules
 
 Configure-WinRM
 
-Install-WindowsFeatures -FeatureNames @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "Telnet-Client", "Web-ASP", "Web-Mgmt-Tools")
+Install-WindowsFeatures -FeatureNames @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "Telnet-Client", "Web-ASP", "Web-Mgmt-Tools", "BitLocker")
 
 # Set W3SVC to start automatically
 try {

@@ -28,8 +28,8 @@ function Test-W74IdleTimeBeforeSessionDisconnect {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $disconnectClientsOnLogonHoursExpire = ($content | Select-String -Pattern "DisconnectClientsOnLogonHoursExpire = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
-        $autoDisconnect = ($content | Select-String -Pattern "AutoDisconnect = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $disconnectClientsOnLogonHoursExpire = ($content | Select-String -Pattern "DisconnectClientsOnLogonHoursExpire" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $autoDisconnect = ($content | Select-String -Pattern "AutoDisconnect" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         $isDisconnectClientsGood = ($disconnectClientsOnLogonHoursExpire -eq 1)
         $isAutoDisconnectGood = ($autoDisconnect -eq $recommendedIdleTimeSeconds)

@@ -23,7 +23,8 @@ function Test-W46DisableEveryoneAnonymousPermissions {
 
     try {
         $registryPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa"
-        $propertyName = "RestrictAnonymous"
+        # EveryoneIncludesAnonymous: 0=Disabled, 1=Enabled
+        $propertyName = "EveryoneIncludesAnonymous"
         
         if (Test-Path $registryPath) {
             $restrictAnonymousValue = (Get-ItemProperty -Path $registryPath -Name $propertyName -ErrorAction SilentlyContinue).$propertyName

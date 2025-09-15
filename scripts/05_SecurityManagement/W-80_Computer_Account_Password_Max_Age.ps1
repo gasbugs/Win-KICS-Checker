@@ -28,8 +28,8 @@ function Test-W80ComputerAccountPasswordMaxAge {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $disableMachineAccountPasswordChange = ($content | Select-String -Pattern "DisableMachineAccountPasswordChange = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
-        $maximumMachineAccountPasswordAge = ($content | Select-String -Pattern "MaximumMachineAccountPasswordAge = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $disableMachineAccountPasswordChange = ($content | Select-String -Pattern "DisableMachineAccountPasswordChange" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $maximumMachineAccountPasswordAge = ($content | Select-String -Pattern "MaximumMachineAccountPasswordAge" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         $isDisableChangeGood = ($disableMachineAccountPasswordChange -eq 0)
         $isMaxAgeGood = ($maximumMachineAccountPasswordAge -eq $recommendedMaxAgeSeconds)

@@ -1,15 +1,14 @@
 <#
 .SYNOPSIS
-    Checks if the 'Allow log on locally' policy only contains Administrators and IUSR_ (if applicable).
+    Checks if the 'Allow log on locally' policy is restricted to Administrators.
 
 .DESCRIPTION
     This script verifies the 'Allow log on locally' user rights assignment.
-    It ensures that only necessary accounts like 'Administrators' and 'IUSR_' (for IIS) are granted this right.
-    Presence of other accounts or groups can increase the attack surface.
+    It ensures that only the 'Administrators' group is granted this right, preventing unauthorized local logons.
     It uses 'secedit /export' to retrieve the local security policy settings.
 
 .OUTPUTS
-    A JSON object indicating the check item, category, result, and details.
+    A JSON object indicating the check item, category, result, and details, including assigned users/groups.
 #>
 
 function Test-W53AllowLocalLogon {
@@ -23,7 +22,7 @@ function Test-W53AllowLocalLogon {
 
     try {
         $tempFile = [System.IO.Path]::GetTempFileName()
-        secedit /export /cfg $tempFile /areas SECURITYPOLICY /quiet
+        secedit /export /cfg $tempFile  /quiet # Removed /areas SECURITYPOLICY
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
@@ -36,23 +35,21 @@ function Test-W53AllowLocalLogon {
                 try {
                     $assignedNames += (New-Object System.Security.Principal.SecurityIdentifier($sid)).Translate([System.Security.Principal.NTAccount]).Value
                 } catch {
-                    # Handle cases where SID might not translate (e.g., well-known SIDs not directly translatable to NTAccount)
                     $assignedNames += $sid # Keep SID if translation fails
                 }
             }
 
             $unnecessaryAccounts = @()
-            foreach ($name in $assignedNames) {
-                # Check for Administrators group (localized name might vary)
-                # Check for IUSR_ (IIS user, might vary)
-                # This check is simplified and might need refinement for all possible localized names or specific IUSR_ patterns.
-                if (-not ($name -like "*\Administrators" -or $name -like "*\IUSR_*")) {
-                    $unnecessaryAccounts += $name
+            # Check for SIDs that are not Administrators (S-1-5-32-544)
+            # Assuming only Administrators should have this right
+            foreach ($sid in $assignedSids) {
+                if (-not ($sid -eq "*S-1-5-32-544")) { # Check against Administrators SID
+                    $unnecessaryAccounts += $sid # Add SID if it's not Administrators
                 }
             }
 
             if ($unnecessaryAccounts.Count -eq 0) {
-                $details = "Only Administrators and IUSR_ (if applicable) are allowed to log on locally. Assigned: $($assignedNames -join ', ')."
+                $details = "Only Administrators are allowed to log on locally. Assigned: $($assignedNames -join ', ')."
             } else {
                 $result = "Vulnerable"
                 $details = "Unnecessary accounts/groups are allowed to log on locally. Assigned: $($assignedNames -join ', '). Unnecessary: $($unnecessaryAccounts -join ', ')."
@@ -72,6 +69,7 @@ function Test-W53AllowLocalLogon {
         Category = $category
         Result = $result
         Details = $details
+        AssignedUsers = $assignedNames # Include assigned users for review
         Timestamp = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
     }
 

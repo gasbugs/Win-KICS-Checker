@@ -26,7 +26,7 @@ function Test-W56RestrictBlankPasswordsConsoleLogon {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $limitBlankPasswordUse = ($content | Select-String -Pattern "LimitBlankPasswordUse = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $limitBlankPasswordUse = ($content | Select-String -Pattern "LimitBlankPasswordUse" | ForEach-Object { $_.ToString().Split('=')[1].Split(',')[1].Trim() }) -as [int]
 
         if ($limitBlankPasswordUse -eq 1) {
             $details = "The 'Accounts: Limit local account use of blank passwords to console logon only' policy is enabled."

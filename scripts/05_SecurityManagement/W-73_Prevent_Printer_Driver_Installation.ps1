@@ -27,7 +27,7 @@ function Test-W73PreventPrinterDriverInstallation {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $preventDriverInstallation = ($content | Select-String -Pattern "PreventDriverInstallation = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $preventDriverInstallation = ($content | Select-String -Pattern "PreventDriverInstallation" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         if ($preventDriverInstallation -eq 1) {
             $details = "The 'Devices: Prevent users from installing printer drivers' policy is enabled."

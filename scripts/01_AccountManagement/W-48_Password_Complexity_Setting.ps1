@@ -26,7 +26,7 @@ function Test-W48PasswordComplexitySetting {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $passwordComplexity = ($content | Select-String -Pattern "PasswordComplexity = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $passwordComplexity = ($content | Select-String -Pattern "PasswordComplexity" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         if ($passwordComplexity -eq 1) {
             $details = "The 'Password must meet complexity requirements' policy is enabled."

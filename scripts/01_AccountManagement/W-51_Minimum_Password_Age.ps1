@@ -28,7 +28,7 @@ function Test-W51MinimumPasswordAge {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $minimumPasswordAge = ($content | Select-String -Pattern "MinimumPasswordAge = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $minimumPasswordAge = ($content | Select-String -Pattern "MinimumPasswordAge" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         if ($minimumPasswordAge -gt 0) {
             $details = "The 'Minimum password age' policy is set to $($minimumPasswordAge / (24*60*60)) days (Recommended: > 0 days)."

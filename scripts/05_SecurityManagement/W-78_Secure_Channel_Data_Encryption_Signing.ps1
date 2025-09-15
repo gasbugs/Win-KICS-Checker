@@ -27,9 +27,9 @@ function Test-W78SecureChannelDataEncryptionSigning {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $requireSignOrSeal = ($content | Select-String -Pattern "RequireSignOrSeal = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
-        $sealSecureChannel = ($content | Select-String -Pattern "SealSecureChannel = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
-        $signSecureChannel = ($content | Select-String -Pattern "SignSecureChannel = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $requireSignOrSeal = ($content | Select-String -Pattern "RequireSignOrSeal" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $sealSecureChannel = ($content | Select-String -Pattern "SealSecureChannel" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $signSecureChannel = ($content | Select-String -Pattern "SignSecureChannel" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         $isRequireSignOrSealGood = ($requireSignOrSeal -eq 1)
         $isSealSecureChannelGood = ($sealSecureChannel -eq 1)

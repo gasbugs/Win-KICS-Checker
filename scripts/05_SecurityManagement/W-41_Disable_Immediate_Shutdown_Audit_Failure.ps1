@@ -22,11 +22,11 @@ function Test-W41DisableImmediateShutdownAuditFailure {
 
     try {
         $tempFile = [System.IO.Path]::GetTempFileName()
-        secedit /export /cfg $tempFile /areas SECURITYPOLICY /quiet
+        secedit /export /cfg $tempFile /quiet # Removed /areas SECURITYPOLICY as per user's last instruction
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $crashOnAuditFail = ($content | Select-String -Pattern "CrashOnAuditFail = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $crashOnAuditFail = ($content | Select-String -Pattern "CrashOnAuditFail" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         if ($crashOnAuditFail -eq 0) {
             $details = "The 'Audit: Shut down system immediately if unable to log security audits' policy is disabled."

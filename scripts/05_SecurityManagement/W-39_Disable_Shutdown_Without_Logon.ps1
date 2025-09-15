@@ -22,11 +22,11 @@ function Test-W39DisableShutdownWithoutLogon {
 
     try {
         $tempFile = [System.IO.Path]::GetTempFileName()
-        secedit /export /cfg $tempFile /areas SECURITYPOLICY /quiet
+        secedit /export /cfg $tempFile /quiet # Removed /areas SECURITYPOLICY as per user's last instruction
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $shutdownWithoutLogon = ($content | Select-String -Pattern "ShutdownWithoutLogon = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $shutdownWithoutLogon = ($content | Select-String -Pattern "ShutdownWithoutLogon" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         if ($shutdownWithoutLogon -eq 0) {
             $details = "The 'Shutdown: Allow system to be shut down without having to log on' policy is disabled."

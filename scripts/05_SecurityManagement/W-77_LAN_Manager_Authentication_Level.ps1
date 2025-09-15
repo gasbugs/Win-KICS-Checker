@@ -26,7 +26,7 @@ function Test-W77LANManagerAuthenticationLevel {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $lmAuthenticationLevel = ($content | Select-String -Pattern "LMAUTHENTICATIONLEVEL = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $lmAuthenticationLevel = ($content | Select-String -Pattern "LMAUTHENTICATIONLEVEL" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         # Good: 4 (Send NTLMv2 response only) or 5 (Send NTLMv2 response only. Refuse LM & NTLM)
         if ($lmAuthenticationLevel -ge 4) {

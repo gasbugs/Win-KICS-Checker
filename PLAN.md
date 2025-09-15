@@ -1,66 +1,32 @@
-# 프로젝트 작업 계획 (PLAN.md)
+# Project Plan
 
-## 1. 개요
+This document outlines the high-level plan and ongoing progress for the Win-KICS-Checker project.
 
-본 문서는 "주요 정보 통신 기반 시설 Windows 취약점 진단 스크립트" 프로젝트의 성공적인 수행을 위한 작업 계획을 정의합니다. 구현할 주요 컴포넌트, 개발 순서, 기술적 요구사항을 명시하여 체계적인 개발을 목표로 합니다.
+## Phase 1: Initial Setup and Core Diagnostics (Completed)
+- Basic PowerShell script structure for diagnostics.
+- Local execution of individual diagnostic scripts.
+- Basic reporting (CSV, JSON).
 
-## 2. 필요 컴포넌트
+## Phase 2: Remote Diagnostics and Enhanced Reporting (In Progress)
+- Implement remote execution capabilities for diagnostic scripts.
+- Centralized logging for remote diagnostics.
+- Enhanced reporting with summary and detailed views.
+- Integration with Vagrant for test environment provisioning.
 
-프로젝트는 다음과 같은 주요 컴포넌트로 구성됩니다.
+## Phase 3: Expanding Diagnostic Coverage (Ongoing)
+- Implement diagnostics for all KICS (Korea Information Security Certification) items.
+- Focus on specific categories (e.g., Account Management, Service Management).
 
-- **1. 개별 진단 스크립트 (Individual Diagnosis Scripts)**
-  - KISA 가이드의 각 점검 항목에 해당하는 PowerShell(.ps1) 파일입니다. 각 스크립트는 독립적으로 실행 가능하며, 표준화된 형식으로 점검 결과를 반환합니다.
+### Diagnostic Script Updates (2025-09-15)
 
-- **2. 공통 기능 모듈 (Common Functions Module)**
-  - 모든 진단 스크립트에서 공통으로 사용될 기능(로그 기록, 결과 처리, 시스템 정보 수집 등)을 모아놓은 모듈입니다. (`scripts/common/common_functions.ps1`)
+- **W-38 (Screensaver Setting):** Modified to use direct registry check for `ScreenSaveActive`, `ScreenSaverIsSecure`, and `ScreenSaveTimeOut`.
+- **W-40 (Force Shutdown Remote System):** Restored original logic to check assigned users for `SeRemoteShutdownPrivilege`, and removed `/areas SECURITYPOLICY` from `secedit /export` command.
+- **W-44 (Allow Removable Media Format Eject):** Changed check to use `allocateDASD` registry value.
+- **W-46 (Network Access: Do Not Allow Anonymous Enumeration of SAM Accounts and Shares):** Script updated by user for proper checking.
+- **W-47 (Account Lockout Duration Setting):** Modified to compare lockout duration and reset counter directly in minutes (60 minutes recommended).
+- **W-50 (Maximum Password Age):** Modified to compare password age directly in days (90 days recommended).
+- **W-52 (Do Not Display Last User Name):** Script updated by user for proper checking.
+- **W-53 (Allow Local Logon):** Script updated by user for proper checking.
+- **test_env/provisioning/install_features.ps1:** Added BitLocker feature installation.
 
-- **3. 메인 실행 스크립트 (Main Execution Script)**
-  - `run_all_diagnostics.ps1` 파일로, 전체 진단 과정을 총괄합니다. 개별 진단 스크립트를 호출하고 결과를 취합하여 종합 보고서를 생성합니다.
-
-- **4. 설정 파일 (Configuration File) - (선택 사항)**
-  - 진단 항목을 정의하거나 제외할 수 있는 설정 파일입니다. (예: `config.json`)
-
-## 3. 구현 순서
-
-개발은 다음 순서로 진행하여 점진적으로 기능을 완성해 나갑니다.
-
-- **1단계: 기반 마련 (Foundation)**
-  - 공통 기능 모듈 설계 및 기본 구현, 결과 보고서 형식 정의.
-
-- **2단계: 핵심 기능 개발 (Core Development)**
-  - 주요 개별 진단 스크립트 개발 및 메인 실행 스크립트 고도화 (원격 실행 및 보고서 생성 기능 포함).
-
-- **3단계: 기능 확장 (Expansion)**
-  - 나머지 개별 진단 스크립트 개발.
-
-- **4단계: 검토 및 안정화 (Stabilization)**
-  - 전체 스크립트 테스트 및 리팩토링, 문서 보강.
-
-## 4. 기술 종속성 및 요구사항
-
-- **운영체제**: Windows Server 2019 (최적화), Windows Server 2016 이상 또는 Windows 10/11
-- **실행 환경**: PowerShell 5.1 이상 (대부분의 Windows에 기본 내장)
-- **실행 권한**: 대부분의 진단 항목은 시스템 설정을 조회해야 하므로 **관리자 권한(Run as Administrator)** 으로 실행해야 합니다.
-- **PowerShell 실행 정책**: 로컬 스크립트 실행을 위해 `Set-ExecutionPolicy RemoteSigned` 정책 설정이 필요합니다.
-- **외부 라이브러리**: 프로젝트의 단순성과 이식성을 위해 외부 라이-브러리나 모듈에 대한 **의존성 없음**을 목표로 합니다.
-
-## 5. 스크립트 작성 규칙 (Scripting Conventions)
-
-- **소스 코드 인코딩**: PowerShell 스크립트 파일(.ps1)에 한글 등 Non-ASCII 문자가 포함될 경우, 실행 환경의 인코딩 설정에 따라 구문 분석 오류(Parser Error)가 발생할 수 있습니다. 이러한 안정성 문제를 근본적으로 해결하기 위해, 모든 진단 스크립트의 소스 코드 및 **파일 경로**는 **영문(ASCII)으로만 작성**하는 것을 원칙으로 합니다.
-- **언어 종속성 회피**: 한글 출력이 필요한 명령어(예: `net accounts`)를 다룰 때는, 특정 문자열을 직접 비교하는 대신 줄 번호(index)나 정규식을 사용하는 등 언어에 종속되지 않는 방식을 사용합니다.
-
-## 6. 진행 상황 (Progress)
-
-### 완료된 작업 (Completed Tasks)
-
-- **전체 진단 스크립트 구현 (82개 항목):** KISA 가이드 기반의 모든 Windows 진단 항목(W-01 ~ W-82)에 대한 개별 스크립트 및 통합 실행 스크립트 개발을 완료했습니다.
-- **원격 진단 기능 안정화:** PSSession을 재사용하고 스크립트 블록을 결합하는 방식으로 원격 실행 속도와 안정성을 개선했습니다.
-- **FTP 진단 기능 고도화 (W-25, W-26, W-27, W-28):** IIS 설정 파일을 직접 분석하도록 로직을 개선하여, FTP 서버 종류나 구성 상태에 관계없이 더 정확한 진단이 가능하도록 구현했습니다.
-- **로컬 진단 스크립트 제공:** 별도의 원격 연결 설정 없이 로컬 컴퓨터에서 즉시 진단을 수행할 수 있는 `run_all_diag_local.ps1`을 추가했습니다.
-- **테스트 환경 자동화 개선:** `install_applications.ps1` 프로비저닝 스크립트를 리팩토링하여 테스트 환경 구성의 안정성과 재사용성을 높였으며, 특히 W-13 (IIS Parent Path Access Prohibition) 취약점 구성이 정확하게 이루어지도록 수정했습니다.
-- **IIS DB 연결 취약점 진단 스크립트 개선 (W-18):** `WebAdministration` PowerShell 모듈 로드 로직을 개선하여 스크립트 실행 안정성을 확보했습니다.
-
-### 향후 계획 (Future Plans)
-
-- **진단 결과 리포트 개선:** 현재 JSON 및 CSV로 제공되는 리포트를 HTML과 같이 가독성 높은 형태로 제공하는 기능 추가를 고려할 수 있습니다.
-- **자동 조치 기능 (선택 사항):** 발견된 취약점에 대해 사용자의 확인 하에 자동으로 조치하는 스크립트 개발을 고려할 수 있습니다.
+Updated diagnostic report files in `reports/` directory.

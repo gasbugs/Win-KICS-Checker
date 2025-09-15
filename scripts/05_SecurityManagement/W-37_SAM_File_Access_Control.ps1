@@ -33,6 +33,8 @@ function Test-W37SAMFileAccessControl {
 
                 # Check for Everyone, Users, Authenticated Users, etc., having excessive rights
                 # Or any non-Administrators/System having Write/Modify/FullControl
+                # S-1-5-32-544 = Administrators group
+                # S-1-5-18 = Local System
                 if ($identity -notmatch '(S-1-5-32-544|S-1-5-18|Administrators|SYSTEM)' -and ($fileSystemRights -band [System.Security.AccessControl.FileSystemRights]::Write -or $fileSystemRights -band [System.Security.AccessControl.FileSystemRights]::Modify -or $fileSystemRights -band [System.Security.AccessControl.FileSystemRights]::FullControl)) {
                     $vulnerablePermissions += "Identity: $identity, Rights: $fileSystemRights"
                 }

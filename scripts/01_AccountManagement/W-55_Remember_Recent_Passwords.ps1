@@ -27,7 +27,7 @@ function Test-W55RememberRecentPasswords {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $passwordHistorySize = ($content | Select-String -Pattern "PasswordHistorySize = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $passwordHistorySize = ($content | Select-String -Pattern "PasswordHistorySize" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         if ($passwordHistorySize -ge $minRecommendedHistory) {
             $details = "The 'Enforce password history' policy is set to remember $passwordHistorySize passwords (Recommended: >= $minRecommendedHistory)."

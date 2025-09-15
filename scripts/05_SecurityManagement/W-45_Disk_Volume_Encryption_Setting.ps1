@@ -22,7 +22,8 @@ function Test-W45DiskVolumeEncryptionSetting {
     $volumeEncryptionStatus = @()
 
     try {
-        $encryptableVolumes = Get-WmiObject -Class Win32_EncryptableVolume -ErrorAction SilentlyContinue
+        # Retrieve all encryptable volumes using CIM
+        $encryptableVolumes = Get-CimInstance -Namespace "Root\CIMV2\Security\MicrosoftVolumeEncryption" -ClassName Win32_EncryptableVolume -ErrorAction SilentlyContinue
 
         if ($encryptableVolumes) {
             $allEncrypted = $true

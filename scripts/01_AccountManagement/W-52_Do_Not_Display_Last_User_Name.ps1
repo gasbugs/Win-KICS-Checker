@@ -27,7 +27,7 @@ function Test-W52DoNotDisplayLastUserName {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $dontDisplayLastUserName = ($content | Select-String -Pattern "DontDisplayLastUserName = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $dontDisplayLastUserName = ($content | Select-String -Pattern "DontDisplayLastUserName" | ForEach-Object { $_.ToString().Split('=')[1].Split(',')[1].Trim() }) -as [int]
 
         if ($dontDisplayLastUserName -eq 1) {
             $details = "The 'Interactive logon: Do not display last user name' policy is enabled."

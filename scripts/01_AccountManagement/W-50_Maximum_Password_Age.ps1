@@ -20,7 +20,6 @@ function Test-W50MaximumPasswordAge {
     $result = "Good"
     $details = ""
     $maxRecommendedDays = 90
-    $maxRecommendedSeconds = $maxRecommendedDays * 24 * 60 * 60
 
     try {
         $tempFile = [System.IO.Path]::GetTempFileName()
@@ -28,18 +27,18 @@ function Test-W50MaximumPasswordAge {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $maximumPasswordAge = ($content | Select-String -Pattern "MaximumPasswordAge = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $maximumPasswordAgeSeconds = ($content | Select-String -Pattern "MaximumPasswordAge" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $maximumPasswordAgeDays = $maximumPasswordAgeSeconds / (24 * 60 * 60)
 
         # A value of 0 means password never expires, which is vulnerable.
-        # If it's set, it's in seconds. So 90 days is 90 * 24 * 60 * 60 seconds.
-        if ($maximumPasswordAge -eq 0) {
+        if ($maximumPasswordAgeSeconds -eq 0) {
             $result = "Vulnerable"
-            $details = "The 'Maximum password age' policy is set to never expire (Current value: 0 seconds)."
-        } elseif ($maximumPasswordAge -le $maxRecommendedSeconds) {
-            $details = "The 'Maximum password age' policy is set to $($maximumPasswordAge / (24*60*60)) days (Recommended: <= $maxRecommendedDays days)."
+            $details = "The 'Maximum password age' policy is set to never expire (Current value: 0 days)."
+        } elseif ($maximumPasswordAgeDays -le $maxRecommendedDays) {
+            $details = "The 'Maximum password age' policy is set to $maximumPasswordAgeDays days (Recommended: <= $maxRecommendedDays days)."
         } else {
             $result = "Vulnerable"
-            $details = "The 'Maximum password age' policy is set to $($maximumPasswordAge / (24*60*60)) days, which is greater than the recommended $maxRecommendedDays days."
+            $details = "The 'Maximum password age' policy is set to $maximumPasswordAgeDays days, which is greater than the recommended $maxRecommendedDays days."
         }
     }
     catch {

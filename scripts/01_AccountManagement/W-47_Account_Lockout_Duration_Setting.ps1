@@ -19,7 +19,7 @@ function Test-W47AccountLockoutDurationSetting {
     $category = "Account Management"
     $result = "Good"
     $details = ""
-    $minRecommendedSeconds = 3600 # 60 minutes
+    $minRecommendedMinutes = 60 # 60 minutes
 
     try {
         $tempFile = [System.IO.Path]::GetTempFileName()
@@ -27,17 +27,17 @@ function Test-W47AccountLockoutDurationSetting {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $lockoutDuration = ($content | Select-String -Pattern "LockoutDuration = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
-        $resetLockoutCount = ($content | Select-String -Pattern "ResetLockoutCount = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $lockoutDuration = ($content | Select-String -Pattern "LockoutDuration" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $resetLockoutCount = ($content | Select-String -Pattern "ResetLockoutCount" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
-        $isLockoutDurationGood = $lockoutDuration -ge $minRecommendedSeconds
-        $isResetLockoutCountGood = $resetLockoutCount -ge $minRecommendedSeconds
+        $isLockoutDurationGood = $lockoutDuration -ge $minRecommendedMinutes
+        $isResetLockoutCountGood = $resetLockoutCount -ge $minRecommendedMinutes
 
         if ($isLockoutDurationGood -and $isResetLockoutCountGood) {
-            $details = "Account lockout duration ($($lockoutDuration/60) minutes) and Reset account lockout counter after ($($resetLockoutCount/60) minutes) are set to recommended values (>= 60 minutes)."
+            $details = "Account lockout duration ($lockoutDuration minutes) and Reset account lockout counter after ($resetLockoutCount minutes) are set to recommended values (>= 60 minutes)."
         } else {
             $result = "Vulnerable"
-            $details = "Account lockout duration ($($lockoutDuration/60) minutes) or Reset account lockout counter after ($($resetLockoutCount/60) minutes) are not set to recommended values (>= 60 minutes)."
+            $details = "Account lockout duration ($lockoutDuration minutes) or Reset account lockout counter after ($resetLockoutCount minutes) are not set to recommended values (>= 60 minutes)."
         }
     }
     catch {

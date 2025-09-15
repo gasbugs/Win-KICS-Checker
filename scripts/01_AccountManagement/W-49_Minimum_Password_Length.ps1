@@ -27,7 +27,7 @@ function Test-W49MinimumPasswordLength {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $minimumPasswordLength = ($content | Select-String -Pattern "MinimumPasswordLength = " | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        $minimumPasswordLength = ($content | Select-String -Pattern "MinimumPasswordLength" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
 
         if ($minimumPasswordLength -ge $minRecommendedLength) {
             $details = "The 'Minimum password length' policy is set to $minimumPasswordLength characters (Recommended: >= $minRecommendedLength)."
