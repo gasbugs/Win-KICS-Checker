@@ -39,7 +39,7 @@ function Test-W71_MultiDirectoryPermissions {
             $acl = Get-Acl -Path $path
 
             # ACL 항목 중 'Everyone' 그룹이 있는지 확인
-            $everyoneAce = $acl.Access | Where-Object { $_.IdentityReference.Value -like "*\Everyone" }
+            $everyoneAce = $acl.Access | Where-Object { $_.IdentityReference.Value -like "Everyone" }
 
             if ($null -ne $everyoneAce) {
                 # 'Everyone' 그룹 권한이 하나라도 발견되면 전체 결과를 '취약'으로 설정
