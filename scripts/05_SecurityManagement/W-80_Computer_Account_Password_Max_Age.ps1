@@ -1,73 +1,78 @@
 <#
 .SYNOPSIS
-    Checks if the 'Domain member: Disable machine account password changes' policy is disabled and 'Domain member: Maximum machine account password age' is set to 90 days.
+    Checks KISA security item W-80: Domain member machine account password management.
 
 .DESCRIPTION
-    This script verifies two security policies related to computer account password management.
-    It ensures that machine account password changes are not disabled and that the maximum age is set to 90 days,
-    promoting regular password rotation for domain members.
-    It uses 'secedit /export' to retrieve the local security policy settings.
+    This script verifies two security policies related to machine account passwords:
+    1. 'Disable machine account password changes' should be Disabled.
+    2. 'Maximum machine account password age' should be set to 90 days.
 
 .OUTPUTS
-    A JSON object indicating the check item, category, result, and details.
+    A JSON object with the check result (Good or Vulnerable) and details.
 #>
-
-function Test-W80ComputerAccountPasswordMaxAge {
+function Test-W80_MachineAccountPasswordPolicy {
     [CmdletBinding()]
     param()
     
+    # --- 점검 기본 정보 ---
     $checkItem = "W-80"
     $category = "Security Management"
-    $result = "Good"
-    $details = @()
-    $recommendedMaxAgeSeconds = 90 * 24 * 60 * 60 # 90 days
+    $result = "Good" # 기본 상태를 '양호'로 설정
+    $vulnerableFindings = [System.Collections.Generic.List[string]]::new()
 
     try {
-        $tempFile = [System.IO.Path]::GetTempFileName()
-        secedit /export /cfg $tempFile /areas SECURITYPOLICY /quiet
-        $content = Get-Content $tempFile
-        Remove-Item $tempFile
+        # --- 점검 대상 레지스트리 경로 ---
+        $registryPath = "HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters"
+        
+        # --- 1. "컴퓨터 계정 암호 변경 사항 사용 안 함" 정책 점검 ---
+        $disableChangeValueName = "DisablePasswordChange"
+        $recommendedDisableChangeValue = 0 # '사용 안 함'은 값이 0 (DWORD)
+        
+        $currentDisableChangeValue = (Get-ItemProperty -Path $registryPath -Name $disableChangeValueName -ErrorAction SilentlyContinue).($disableChangeValueName)
 
-        $disableMachineAccountPasswordChange = ($content | Select-String -Pattern "DisableMachineAccountPasswordChange" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
-        $maximumMachineAccountPasswordAge = ($content | Select-String -Pattern "MaximumMachineAccountPasswordAge" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
-
-        $isDisableChangeGood = ($disableMachineAccountPasswordChange -eq 0)
-        $isMaxAgeGood = ($maximumMachineAccountPasswordAge -eq $recommendedMaxAgeSeconds)
-
-        if (-not $isDisableChangeGood) {
+        if ($currentDisableChangeValue -ne $recommendedDisableChangeValue) {
             $result = "Vulnerable"
-            $details += "'Domain member: Disable machine account password changes' policy is enabled (Current: $disableMachineAccountPasswordChange). "
-        }
-        if (-not $isMaxAgeGood) {
-            $result = "Vulnerable"
-            $details += "'Domain member: Maximum machine account password age' policy is not set to 90 days (Current: $($maximumMachineAccountPasswordAge / (24*60*60)) days). "
+            $currentValStr = if ($null -eq $currentDisableChangeValue) { "Not Found" } else { $currentDisableChangeValue }
+            $vulnerableFindings.Add("Policy 'Disable machine account password changes' is not 'Disabled'. (Current: $currentValStr)")
         }
 
-        if ($result -eq "Good") {
-            $details = "Both computer account password policies are configured as recommended."
-        } elseif ($details.Count -gt 0) {
-            $details = "Computer account password policies are vulnerable: " + ($details -join [Environment]::NewLine)
+        # --- 2. "컴퓨터 계정 암호의 최대 사용 기간" 정책 점검 ---
+        $maxAgeValueName = "MaximumPasswordAge"
+        $recommendedMaxAgeValue = 90 # '90일'
+        
+        $currentMaxAgeValue = (Get-ItemProperty -Path $registryPath -Name $maxAgeValueName -ErrorAction SilentlyContinue).($maxAgeValueName)
+
+        if ($currentMaxAgeValue -ne $recommendedMaxAgeValue) {
+            $result = "Vulnerable"
+            $currentValStr = if ($null -eq $currentMaxAgeValue) { "Not Found or Not Set to 90" } else { $currentMaxAgeValue }
+            $vulnerableFindings.Add("Policy 'Maximum machine account password age' is not set to '90' days. (Current: $currentValStr)")
+        }
+
+        # --- 최종 결과 정리 ---
+        if ($result -eq "Vulnerable") {
+            $details = "Machine account password policies are not compliant.`n" + ($vulnerableFindings -join "`n")
         } else {
-            $result = "Error"
-            $details = "Could not retrieve all computer account password policy settings."
+            $details = "Machine account password policies are configured correctly."
+            $details += "`n- 'Disable password changes' is Disabled (Value: $currentDisableChangeValue)"
+            $details += "`n- 'Maximum password age' is 90 days (Value: $currentMaxAgeValue)"
         }
     }
     catch {
         $result = "Error"
-        $details = "An error occurred while checking computer account password policies: $($_.Exception.Message)"
+        $details = "An error occurred while checking the registry: $($_.Exception.Message)"
     }
 
+    # --- 결과를 JSON 형식으로 출력 ---
     $output = @{
         CheckItem = $checkItem
-        Category = $category
-        Result = $result
-        Details = $details
+        Category  = $category
+        Result    = $result
+        Details   = $details
         Timestamp = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
     }
 
-    # Convert to JSON and output
     $output | ConvertTo-Json -Depth 4
 }
 
-# Execute the function
-Test-W80ComputerAccountPasswordMaxAge
+# 함수 실행
+Test-W80_MachineAccountPasswordPolicy
