@@ -47,7 +47,7 @@ Win-KICS-Checker/
 #### 전체 진단 실행 (원격)
 
 ```powershell
-.un_all_diag_remote.ps1 -ComputerName <원격_컴퓨터_이름_또는_IP> -Credential (Get-Credential)
+./run_all_diag_remote.ps1 -ComputerName <원격_컴퓨터_이름_또는_IP> -Credential (Get-Credential)
 ```
 또는 기본값 사용:
 
@@ -60,12 +60,12 @@ Win-KICS-Checker/
 원하는 진단 스크립트 파일명(예: `W-01_Administrator_Rename.ps1`)을 리스트로 전달하여 특정 항목만 진단할 수 있습니다.
 
 ```powershell
-.un_all_diag_local.ps1 -CheckList "W-01_Administrator_Rename.ps1", "W-02_Guest_Account_Disable.ps1"
+./run_all_diag_local.ps1 -CheckList "01,02"
 ```
 또는 원격으로:
 
 ```powershell
-.un_all_diag_remote.ps1 -ComputerName <원격_컴퓨터_이름_또는_IP> -Credential (Get-Credential) -CheckList "W-01_Administrator_Rename.ps1", "W-02_Guest_Account_Disable.ps1"
+./run_all_diag_remote.ps1 -ComputerName <원격_컴퓨터_이름_또는_IP> -Credential (Get-Credential) -CheckList "W-01_Administrator_Rename.ps1", "W-02_Guest_Account_Disable.ps1"
 ```
 
 ### 2. 보고서 확인
