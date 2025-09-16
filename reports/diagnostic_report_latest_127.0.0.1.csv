@@ -1,114 +1,314 @@
 ﻿"CheckItem","Category","Result","Details","Timestamp"
-"W-01","Account Management","Vulnerable","The default administrator account name has not been changed.","2025-09-15 05:37:09"
-"W-02","Account Management","Good","The Guest account is disabled.","2025-09-15 05:37:09"
-"W-03","Account Management","Manual Check Required","Review the list of user accounts in the 'UserAccounts' property to identify any unnecessary accounts. User Accounts: Name: Administrator, Enabled: True, Description: Built-in account for administering the computer/domain; Name: DefaultAccount, Enabled: False, Description: A user account managed by the system.; Name: Guest, Enabled: False, Description: Built-in account for guest access to the computer/domain; Name: vagrant, Enabled: True, Description: Vagrant; Name: WDAGUtilityAccount, Enabled: False, Description: A user account managed and used by the system for Windows Defender Application Guard scenarios.","2025-09-15 05:37:09"
-"W-04","Account Management","Good","The account lockout threshold is set to 5, which is within the recommended range (1-5).","2025-09-15 05:37:09"
-"W-05","Account Management","Good","Storing passwords using reversible encryption is disabled (Value: 0).","2025-09-15 05:37:09"
-"W-06","Account Management","Manual Check Required","Review the members of the 'Administrators' group in the 'GroupMembers' property. Group Members: Name: WIN-KOE539IAVT1\Administrator, ObjectClass: 사용자; Name: WIN-KOE539IAVT1\vagrant, ObjectClass: 사용자","2025-09-15 05:37:17"
-"W-46","Account Management","Good","The 'Network access: Do not allow anonymous enumeration of SAM accounts and shares' policy is enabled (RestrictAnonymous value: 1).","2025-09-15 05:37:18"
-"W-47","Account Management","Good","Account lockout duration (60 minutes) and Reset account lockout counter after (60 minutes) are set to recommended values (>= 60 minutes).","2025-09-15 05:37:18"
-"W-48","Account Management","Good","The 'Password must meet complexity requirements' policy is enabled.","2025-09-15 05:37:18"
-"W-49","Account Management","Good","The 'Minimum password length' policy is set to 8 characters (Recommended: >= 8).","2025-09-15 05:37:20"
-"W-50","Account Management","Good","The 'Maximum password age' policy is set to 0 days (Recommended: <= 90 days).","2025-09-15 05:37:20"
-"W-51","Account Management","Good","The 'Minimum password age' policy is set to 1.15740740740741E-05 days (Recommended: > 0 days).","2025-09-15 05:37:21"
-"W-52","Account Management","Good","The 'Interactive logon: Do not display last user name' policy is enabled.","2025-09-15 05:37:24"
-"W-53","Account Management","Vulnerable","Unnecessary accounts/groups are allowed to log on locally. Assigned: *S-1-5-32-544, *S-1-5-32-545, *S-1-5-32-551. Unnecessary: *S-1-5-32-545, *S-1-5-32-551.","2025-09-15 05:37:25"
-"W-54","Account Management","Vulnerable","The 'Network access: Allow anonymous SID/name translation' policy is enabled (Current value: 1).","2025-09-15 05:37:25"
-"W-55","Account Management","Good","The 'Enforce password history' policy is set to remember 4 passwords (Recommended: >= 4).","2025-09-15 05:37:26"
-"W-56","Account Management","Good","The 'Accounts: Limit local account use of blank passwords to console logon only' policy is enabled.","2025-09-15 05:37:26"
-"W-57","Account Management","Manual Check Required","The 'Remote Desktop Users' group contains members other than the built-in Administrator. Manual review is required to ensure these accounts are authorized and necessary for remote access.","2025-09-15 05:37:26"
-"W-07","Service Management","Vulnerable","The following shares grant access to 'Everyone': VulnerableShare","2025-09-15 05:37:26"
-"W-08","Service Management","Vulnerable","The registry key for auto-sharing is not set, which defaults to enabled.","2025-09-15 05:37:27"
-"W-09","Service Management","Vulnerable","The following generally unnecessary services are running: Browser (Name: bowser, Status: Running, StartMode: Manual). Additionally, the following services require manual review based on system role: Windows Update (Name: wuauserv, Status: Stopped, StartMode: Manual); Cryptographic Services (Name: CryptSvc, Status: Running, StartMode: Automatic); DHCP Client (Name: Dhcp, Status: Running, StartMode: Automatic); Distributed Link Tracking Client (Name: TrkWks, Status: Running, StartMode: Automatic); DNS Client (Name: Dnscache, Status: Running, StartMode: Automatic); Print Spooler (Name: Spooler, Status: Running, StartMode: Automatic).","2025-09-15 05:37:27"
-"W-10","Service Management","Vulnerable","The World Wide Web Publishing Service (W3SVC) is running. If this service is not required, it should be disabled.","2025-09-15 05:37:27"
-"W-11","Service Management","Good","Directory browsing is disabled on all detected IIS websites.","2025-09-15 05:37:27"
-"W-12","Service Management","Vulnerable","Excessive permissions granted to 'Everyone' on the default CGI directory. The 'Everyone' group has 'Write, Synchronize' permissions on 'C:\inetpub\scripts'.","2025-09-15 05:37:30"
-"W-13","Service Management","Vulnerable","Parent path access is enabled on the following IIS websites: Default Web Site. This allows access to higher-level directories.","2025-09-15 05:37:30"
-"W-14","Service Management","Good","This check (W-14) is not applicable for IIS 7.0 (Windows Server 2008) and later versions. Current OS version is 10.0.","2025-09-15 05:37:30"
-"W-15","Service Management","Good","All detected IIS application pools are using ApplicationPoolIdentity.","2025-09-15 05:37:30"
-"W-16","Service Management","Good","No prohibited links or shortcuts found in IIS website directories.","2025-09-15 05:37:30"
-"W-17","Service Management","Manual Check Required","IIS is installed. File upload and download size restrictions (W-17) require manual verification due to their context-dependent nature and the need to inspect application-specific configurations.\n\nManual Check Steps (refer to guide for details):
-1. Inspect 'applicationHost.config' (typically %SystemRoot%\System32\inetsrv\config\applicationHost.config) for global settings like 'maxAllowedContentLength'.
-2. Inspect 'web.config' files in website root directories for site-specific settings like 'maxAllowedContentLength', 'MaxRequestEntityAllowed', and 'bufferingLimit'.
-3. Verify if the web application actually uses file upload/download features and if the configured limits are appropriate for the system's role.
-Default values (if not explicitly set) are: maxAllowedContentLength (30MB), MaxRequestEntityAllowed (200000 bytes), bufferingLimit (4MB).","2025-09-15 05:37:30"
-"W-18","Service Management","Vulnerable","The following sites have a vulnerable .asa handler mapping allowing all verbs (*): Default Web Site, Default Web Site, Default Web Site, Default Web Site, Default FTP Site","2025-09-15 05:37:30"
-"W-19","Service Management","Good","This check (W-19) is not applicable for Windows 2003 (IIS 6.0) and later versions. Current OS version is 10.0.","2025-09-15 05:37:30"
-"W-20","Service Management","Good","No excessive 'Everyone' permissions found on IIS data files.","2025-09-15 05:37:30"
-"W-21","Service Management","Good","No vulnerable unused script mappings found.","2025-09-15 05:37:30"
-"W-22","Service Management","Good","This check is not applicable for IIS 6.0 and later versions. Current OS version is 10.0.","2025-09-15 05:37:32"
-"W-23","Service Management","Vulnerable","WebDAV module is enabled in IIS. It should be disabled if not in use.","2025-09-15 05:37:32"
-"W-24","Service Management","Vulnerable","NetBIOS over TCP/IP binding is enabled on the following adapters: Intel(R) PRO/1000 MT Desktop Adapter. It should be disabled.","2025-09-15 05:37:32"
-"W-25","Service Management","Vulnerable","Standard IIS FTP service (FTPSVC) is running. It should be disabled if not in use or replaced with a secure alternative (SFTP/FTPS).","2025-09-15 05:37:32"
-"W-26","Service Management","Good","All checked FTP site home directories have appropriate permissions.","2025-09-15 05:37:32"
-"W-27","Service Management","Vulnerable","Anonymous FTP access is enabled on the following sites: Default FTP Site.","2025-09-15 05:37:32"
-"W-28","Service Management","Vulnerable","FTP access on the following sites is not restricted by IP address (default is allow): Default FTP Site.","2025-09-15 05:37:32"
-"W-29","Service Management","Vulnerable","DNS Zone Transfer is allowed to any server on the following zones: lab.local. It should be restricted.","2025-09-15 05:37:32"
-"W-30","Service Management","Good","This check is not applicable for OS versions newer than Windows 2003. Current OS version is 10.0.","2025-09-15 05:37:33"
-"W-31","Service Management","Good","Operating system (Microsoft Windows Server 2019 Standard Evaluation) is a newer version (Windows Server 2016/2019 or later) which typically does not use traditional service packs. Regular updates are expected.","2025-09-15 05:37:33"
-"W-58","Service Management","Good","Terminal Services encryption level is set to 2 (Recommended: >= 2).","2025-09-15 05:37:33"
-"W-59","Service Management","Vulnerable","IIS is not configured to hide the web service information (removeServerHeader is false).","2025-09-15 05:37:33"
-"W-60","Service Management","Vulnerable","SNMP service is running.","2025-09-15 05:37:33"
-"W-61","Service Management","Good","SNMP service is running and uses non-default community strings: .","2025-09-15 05:37:33"
-"W-62","Service Management","Vulnerable","SNMP service is running and configured to accept packets from all hosts (PermittedManagers is not set or empty).","2025-09-15 05:37:33"
-"W-63","Service Management","Manual Check Required","DNS Server service is running. Dynamic update settings for each zone require manual verification (DNSMGMT.MSC).","2025-09-15 05:37:33"
-"W-64","Service Management","Manual Check Required","IIS (HTTP) service is running. HTTP banner information requires manual verification (refer to W-59 for header checks).
-FTP service is not running or not installed. (Good)
-SMTP service is not running or not installed. (Good)","2025-09-15 05:37:36"
-"W-65","Service Management","Good","Telnet service is not installed. (Good)","2025-09-15 05:37:36"
-"W-66","Service Management","Good","No System DSNs found. (Good)","2025-09-15 05:37:36"
-"W-67","Service Management","Vulnerable","Remote terminal connection timeout (MaxIdleTime) is set to 0 (never disconnect).","2025-09-15 05:37:36"
-"W-68","Service Management","Manual Check Required","Found 134 scheduled tasks. Detailed information is available in the JSON report.","2025-09-15 05:37:36"
-"W-32","Patch Management","Manual Check Required","Windows Update service (wuauserv) is installed but not running. Manual review of system patch status is required to ensure latest hotfixes are applied.","2025-09-15 05:37:36"
-"W-33","Patch Management","Manual Check Required","Windows Defender Antivirus Service is running. Manual review of its update status and other installed antivirus solutions is required.","2025-09-15 05:37:36"
-"W-69","Patch Management","Manual Check Required","Security event log configuration: 
-  - Maximum Size: 20 MB
-  - Retention Policy: Circular
-Detailed audit policy settings require manual verification (SECPOL.MSC or GPEDIT.MSC).","2025-09-15 05:37:37"
-"W-34","Log Management","Manual Check Required","Regular review, analysis, and reporting of security, application, and system logs is a procedural check that requires manual verification.","2025-09-15 05:37:37"
-"W-35","Log Management","Good","Remote Registry Service is stopped. (Good)","2025-09-15 05:37:37"
-"W-70","Log Management","Vulnerable","Some event logs do not meet the recommended size or retention policies.
-Application Log: Vulnerable. Retention policy is 'Overwrite events as needed' (Circular).  Max Size: 20480 KB, Mode: Circular.
-System Log: Vulnerable. Retention policy is 'Overwrite events as needed' (Circular).  Max Size: 20480 KB, Mode: Circular.
-Security Log: Vulnerable. Retention policy is 'Overwrite events as needed' (Circular).  Max Size: 20480 KB, Mode: Circular.","2025-09-15 05:37:37"
-"W-71","Log Management","Good","All checked log directories do not have 'Everyone' access permissions.
-Directory 'C:\Windows\System32\config' does not have 'Everyone' access permissions. 
-Directory 'C:\Windows\System32\LogFiles' does not have 'Everyone' access permissions. ","2025-09-15 05:37:37"
-"W-36","Security Management","Vulnerable","No active antivirus program detected by Windows Security Center.","2025-09-15 05:37:37"
-"W-37","Security Management","Good","SAM file access permissions are appropriately restricted to Administrators and System.","2025-09-15 05:37:37"
-"W-38","Security Management","Vulnerable","Screensaver settings are vulnerable: Screensaver is not password protected. ","2025-09-15 05:37:37"
-"W-39","Security Management","Vulnerable","The 'Shutdown: Allow system to be shut down without having to log on' policy is enabled (Current value: 40).","2025-09-15 05:37:38"
-"W-40","Security Management","Vulnerable","Unnecessary accounts/groups are allowed to force shutdown from a remote system. Assigned: vagrant, *S-1-5-32-544. Unnecessary: vagrant, *S-1-5-32-544.","2025-09-15 05:37:38"
-"W-41","Security Management","Vulnerable","The 'Audit: Shut down system immediately if unable to log security audits' policy is enabled (Current value: 40).","2025-09-15 05:37:43"
-"W-42","Security Management","Vulnerable","System.Object[]","2025-09-15 05:37:43"
-"W-43","Security Management","Good","Autologon is disabled (AutoAdminLogon value is absent or 0).","2025-09-15 05:37:43"
-"W-44","Security Management","Vulnerable","All users are allowed to format and eject removable media (allocateDASD is 2). Recommended: 0 (Administrators only).","2025-09-15 05:37:43"
-"W-45","Security Management","Vulnerable","Some fixed drives are not encrypted or not fully protected. Review volume encryption status.","2025-09-15 05:37:43"
-"W-72","Security Management","Vulnerable","Some DoS defense registry settings are not configured as recommended: SynAttackProtect is not set to 1 or 2 (Current: Not Set). 
-EnableDeadGWDetect is not set to 0 (Current: Not Set). 
-KeepAliveTime is not set to 300000 (5 minutes) (Current: Not Set milliseconds). 
-NoNameReleaseOnDemand is not set to 1 (Current: Not Set). ","2025-09-15 05:37:43"
-"W-73","Security Management","Vulnerable","The 'Devices: Prevent users from installing printer drivers' policy is disabled (Current value: 0).","2025-09-15 05:37:43"
-"W-74","Security Management","Vulnerable","Session management policies are vulnerable: 'Microsoft network server: Disconnect clients when logon hours expire' policy is not enabled (Current: 0). 
-'Microsoft network server: Amount of idle time required before suspending session' policy is not set to 900 seconds (Current: 415 seconds). ","2025-09-15 05:37:43"
-"W-75","Security Management","Vulnerable","Logon warning message title or text is not set. Title is missing. Text is missing. ","2025-09-15 05:37:43"
-"W-76","Security Management","Good","All checked user home directories do not have 'Everyone' access permissions. Home directory 'C:\Users\.NET v4.5 Classic' for user '\' does not have 'Everyone' access permissions. 
-Home directory 'C:\Users\.NET v4.5' for user '\' does not have 'Everyone' access permissions. 
-Home directory 'C:\Users\vagrant' for user '\' does not have 'Everyone' access permissions. 
-Home directory 'C:\Windows\ServiceProfiles\NetworkService' for user '\' does not have 'Everyone' access permissions. 
-Home directory 'C:\Windows\ServiceProfiles\LocalService' for user '\' does not have 'Everyone' access permissions. 
-Home directory 'C:\Windows\system32\config\systemprofile' for user '\' does not have 'Everyone' access permissions. ","2025-09-15 05:37:43"
-"W-77","Security Management","Vulnerable","The 'Network security: LAN Manager authentication level' policy is set to 0, which is weaker than recommended (Should be 4 or 5).","2025-09-15 05:37:45"
-"W-78","Security Management","Vulnerable","System.Object[]","2025-09-15 05:37:45"
-"W-79","Security Management","Good","All fixed drives are using the NTFS file system.","2025-09-15 05:37:45"
-"W-80","Security Management","Vulnerable","Computer account password policies are vulnerable: 'Domain member: Maximum machine account password age' policy is not set to 90 days (Current: 0 days). ","2025-09-15 05:37:46"
-"W-81","Security Management","Manual Check Required","The following startup programs were found. Manual review is required to identify and disable/remove any unnecessary or suspicious ones.
-
-Name           FullName                                      Source                    
-----           --------                                      ------                    
-SecurityHealth C:\Windows\system32\SecurityHealthSystray.exe Local Machine Run Registry
-VBoxTray       C:\Windows\system32\VBoxTray.exe              Local Machine Run Registry
-
-
-","2025-09-15 05:37:46"
-"W-82","Security Management","Good","SQL Server service is not running or not installed. This check is not applicable.","2025-09-15 05:37:46"
+"W-69","Policy and Logging","Good","All Basic and Advanced audit policies are correctly configured according to recommendations.","2025-09-16 05:30:23"
+"W-70","Log Management","Vulnerable","Some logs do not meet the custom criteria.
+??[Internet Explorer] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Client-Licensing-Platform/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Rdms-UI/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Rdms-UI/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-User Experience Virtualization-Agent Driver/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-User Experience Virtualization-App Agent/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-User Experience Virtualization-IPC/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-User Experience Virtualization-SQM Uploader/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AAD/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-All-User-Install-Agent/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AllJoyn/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppHost/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppID/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-ApplicabilityEngine/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Application Server-Applications/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Application Server-Applications/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Application-Experience/Program-Compatibility-Assistant] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Application-Experience/Program-Compatibility-Troubleshooter] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Application-Experience/Program-Inventory] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Application-Experience/Program-Telemetry] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Application-Experience/Steps-Recorder] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppLocker/EXE and DLL] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppLocker/MSI and Script] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppLocker/Packaged app-Deployment] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppLocker/Packaged app-Execution] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppModel-Runtime/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppReadiness/Admin] Vulnerable. Size: 5120 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppReadiness/Operational] Vulnerable. Size: 5120 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppXDeployment/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppXDeploymentServer/Operational] Vulnerable. Size: 5120 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppXDeploymentServer/Restricted] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-AppxPackaging/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Audio/CaptureMonitor] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Audio/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Audio/PlaybackManager] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Authentication User Interface/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-BackgroundTaskInfrastructure/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Backup] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-BestPractices/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Biometrics/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-BitLocker-DrivePreparationTool/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-BitLocker-DrivePreparationTool/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-BitLocker/BitLocker Management] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Bits-Client/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Bluetooth-BthLEPrepairing/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Bluetooth-MTPEnum/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Bluetooth-Policy/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-BranchCacheSMB/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-CertificateServices-Deployment/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-CertificateServicesClient-Lifecycle-System/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-CertificateServicesClient-Lifecycle-User/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-CloudStore/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-CodeIntegrity/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Compat-Appraiser/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Containers-BindFlt/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Containers-CCG/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Containers-Wcifs/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Containers-Wcnfs/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-CoreApplication/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-CorruptedFileRecovery-Client/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-CorruptedFileRecovery-Server/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Crypto-DPAPI/BackUpKeySvc] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Crypto-DPAPI/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Crypto-NCrypt/CertInUse] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DAL-Provider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DataIntegrityScan/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DataIntegrityScan/CrashRecovery] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DateTimeControlPanel/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DeviceGuard/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Devices-Background/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DeviceSetupManager/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DeviceSetupManager/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DeviceSync/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DeviceUpdateAgent/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Dhcp-Client/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Dhcpv6-Client/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Diagnosis-DPS/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Diagnosis-PCW/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Diagnosis-PLA/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Diagnosis-Scheduled/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Diagnosis-Scripted/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Diagnosis-Scripted/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Diagnosis-ScriptedDiagnosticsProvider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Diagnostics-Networking/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DirectoryServices-Deployment/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DiskDiagnostic/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DiskDiagnosticDataCollector/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DiskDiagnosticResolver/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DSC/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-DSC/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-EapHost/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-EapMethods-RasChap/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-EapMethods-RasTls/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-EapMethods-Sim/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-EapMethods-Ttls/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-EDP-Application-Learning/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-EDP-Audit-Regular/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-EDP-Audit-TCB/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-EnrollmentPolicyWebService/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-EnrollmentWebService/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-EventCollector/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Fault-Tolerant-Heap/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-FeatureConfiguration/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-FederationServices-Deployment/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-FileServices-ServerManager-EventProvider/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-FileServices-ServerManager-EventProvider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-FileShareShadowCopyProvider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-FMS/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Folder Redirection/Operational] Vulnerable. Size: 4096 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Forwarding/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-GenericRoaming/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-GroupPolicy/Operational] Vulnerable. Size: 4096 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-HelloForBusiness/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Help/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-HomeGroup Control Panel/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Hyper-V-Guest-Drivers/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Hyper-V-Hypervisor-Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Hyper-V-Hypervisor-Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-IdCtrls/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-IKE/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-International-RegionalOptionsControlPanel/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-International/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Iphlpsvc/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-KdsSvc/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Kernel-ApphelpCache/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Kernel-Boot/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Kernel-EventTracing/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Kernel-IO/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Kernel-PnP/Configuration] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Kernel-Power/Thermal-Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Kernel-ShimEngine/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Kernel-StoreMgr/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Kernel-WDI/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Kernel-WHEA/Errors] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Kernel-WHEA/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Known Folders API Service] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-LanguagePackSetup/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-LiveId/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-ManagementTools-RegistryProvider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-ManagementTools-TaskManagerProvider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-MemoryDiagnostics-Results/Debug] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-MiStreamProvider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Mobile-Broadband-Experience-Parser-Task/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Mobile-Broadband-Experience-SmsRouter/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Mprddm/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-MsLbfoProvider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-MUI/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-MUI/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-NCSI/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-NdisImPlatform/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-NetworkLocationWizard/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-NetworkProfile/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-NetworkProvider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-NlaSvc/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Ntfs/WHC] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-NTLM/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-OfflineFiles/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-OOBE-Machine-DUI/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PackageStateRoaming/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PerceptionRuntime/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PerceptionSensorDataService/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PersistentMemory-Nvdimm/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PersistentMemory-PmemDisk/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PersistentMemory-ScmBus/Certification] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Policy/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PowerShell-DesiredStateConfiguration-FileDownloadManager/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PowerShell/Admin] Vulnerable. Size: 1024400 KB. Mode: Retain (Non-compliant, expected 'Circular')
+??[Microsoft-Windows-PrintBRM/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PrintService/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PriResources-Deployment/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Program-Compatibility-Assistant/CompatAfterUpgrade] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PushNotification-Platform/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-PushNotification-Platform/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-ReadyBoost/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-ReFS/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Regsvr32/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-RemoteApp and Desktop Connections/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-RemoteApp and Desktop Connections/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-RemoteDesktopServices-RdpCoreTS/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-RemoteDesktopServices-RdpCoreTS/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-RemoteDesktopServices-RemoteFX-Synth3dvsc/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-RemoteDesktopServices-SessionServices/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Resource-Exhaustion-Detector/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Resource-Exhaustion-Resolver/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-RestartManager/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SearchUI/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Security-Adminless/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Security-Audit-Configuration-Client/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Security-EnterpriseData-FileRevocationManager/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Security-LessPrivilegedAppContainer/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Security-Mitigations/KernelMode] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Security-Mitigations/UserMode] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Security-Netlogon/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Security-SPP-UX-GenuineCenter-Logging/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Security-SPP-UX-Notifications/ActionCenter] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Security-UserConsentVerifier/Audit] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SecurityMitigationsBroker/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SENSE/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SenseIR/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-ServerManager-ConfigureSMRemoting/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-ServerManager-DeploymentProvider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-ServerManager-MgmtProvider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-ServerManager-MultiMachine/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-ServerManager-MultiMachine/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SettingSync-Azure/Debug] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SettingSync-Azure/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SettingSync-OneDrive/Debug] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SettingSync-OneDrive/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SettingSync/Debug] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SettingSync/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Shell-ConnectedAccountState/ActionCenter] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Shell-Core/ActionCenter] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Shell-Core/AppDefaults] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Shell-Core/LogonTasksChannel] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Shell-Core/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-ShellCommon-StartLayoutPopulation/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SilProvider/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SmartCard-Audit/Authentication] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SmartCard-DeviceEnum/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SmartCard-TPM-VCard-Module/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SmartCard-TPM-VCard-Module/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SmbClient/Audit] Vulnerable. Size: 8192 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SmbClient/Connectivity] Vulnerable. Size: 8192 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SMBClient/Operational] Vulnerable. Size: 8192 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SmbClient/Security] Vulnerable. Size: 8192 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SMBDirect/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SMBServer/Audit] Vulnerable. Size: 8192 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SMBServer/Connectivity] Vulnerable. Size: 8192 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SMBServer/Operational] Vulnerable. Size: 8192 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SMBServer/Security] Vulnerable. Size: 8192 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SMBWitnessClient/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SMBWitnessClient/Informational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-StateRepository/Operational] Vulnerable. Size: 5120 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-StateRepository/Restricted] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Storage-ClassPnP/Operational] Vulnerable. Size: 6144 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Storage-Storport/Health] Vulnerable. Size: 6144 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Storage-Tiering/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-StorageManagement-PartUtil/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-StorageSpaces-Api/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-StorageSpaces-Driver/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-StorageSpaces-ManagementAgent/WHC] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-StorageSpaces-SpaceManager/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-SystemSettingsThreshold/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TaskScheduler/Maintenance] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TCPIP/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-ClientUSBDevices/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-ClientUSBDevices/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-LocalSessionManager/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-LocalSessionManager/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-PnPDevices/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-PnPDevices/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-Printers/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-Printers/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-RDPClient/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-RemoteConnectionManager/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-ServerUSBDevices/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-ServerUSBDevices/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-SessionBroker-Client/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TerminalServices-SessionBroker-Client/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Time-Service-PTP-Provider/PTP-Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Time-Service/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TWinUI/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TZSync/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-TZUtil/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-UAC-FileVirtualization/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-UAC/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-UniversalTelemetryClient/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-User Control Panel/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-User Device Registration/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-User Profile Service/Operational] Vulnerable. Size: 4096 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-User-Loader/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-UserPnp/ActionCenter] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-UserPnp/DeviceInstall] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-VDRVROOT/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-VerifyHardwareSecurity/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-VHDMP-Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Volume/Diagnostic] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-VolumeSnapshot-Driver/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-VPN-Client/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-VPN/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Wcmsvc/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WebAuthN/Operational] Vulnerable. Size: 5120 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WER-PayloadHealth/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WFP/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Win32k/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Windows Defender/WHC] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Windows Firewall With Advanced Security/ConnectionSecurity] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Windows Firewall With Advanced Security/Firewall] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Windows Firewall With Advanced Security/FirewallDiagnostics] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WindowsSystemAssessmentTool/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WindowsUpdateClient/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WinHttp/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WinINet-Config/ProxyConfigChanged] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WinINet/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Winlogon/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WinRM/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Winsock-WS2HELP/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Wired-AutoConfig/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WMI-Activity/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WMPNSS-Service/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-Workplace Join/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WPD-ClassInstaller/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WPD-CompositeClassDriver/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Microsoft-Windows-WPD-MTPClassDriver/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[OpenSSH/Admin] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[OpenSSH/Operational] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[Setup] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)
+??[SMSApi] Vulnerable. Size: 1028 KB. Mode: Circular (Compliant as per requirement) (Size requirement not met)","2025-09-16 05:30:33"

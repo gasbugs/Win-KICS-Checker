@@ -32,7 +32,14 @@ function Test-W61SNMPCommunityStringComplexity {
             # SNMP service is running, check community strings
             $registryPath = "HKLM:\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities"
             if (Test-Path $registryPath) {
-                $communityStrings = Get-ItemProperty -Path $registryPath | Select-Object -ExpandProperty PSObject | Select-Object -ExpandProperty Properties | Where-Object { $_.Name -ne '(default)' } | Select-Object -ExpandProperty Name
+                # 1. Get-Item으로 레지스트리 키 객체를 가져옵니다.
+                $registryKey = Get-Item -Path $registryPath
+
+                # 2. GetValueNames() 메서드를 사용해 값 이름들의 목록을 가져옵니다.
+                $valueNames = $registryKey.GetValueNames()
+
+                # 3. (Default) 값을 제외하고 출력합니다.
+                $communityStrings = $valueNames | Where-Object { $_ -ne '(default)' }
 
                 $vulnerableStrings = @("public", "private")
                 $foundVulnerable = $false

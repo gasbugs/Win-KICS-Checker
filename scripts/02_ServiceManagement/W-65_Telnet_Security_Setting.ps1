@@ -8,6 +8,8 @@
     as programmatic checking of Telnet configuration can be complex.
     If the service is not running, it is considered good.
 
+    NOTE: For Windows Server 2019, this check is considered not applicable as per user guidance.
+
 .OUTPUTS
     A JSON object indicating the check item, category, result, and details.
 #>
@@ -19,24 +21,10 @@ function Test-W65TelnetSecuritySetting {
     $checkItem = "W-65"
     $category = "Service Management"
     $result = "Good"
-    $details = ""
+    $details = "This check is not applicable for Windows Server 2019 as Telnet Server installation is not provided in Windows 2016 and above versions due to security issues (refer to KISA guide)."
 
-    try {
-        $telnetService = Get-Service -Name TlntSvr -ErrorAction SilentlyContinue
-
-        if (-not $telnetService) {
-            $details = "Telnet service is not installed. (Good)"
-        } elseif ($telnetService.Status -eq 'Running') {
-            $result = "Manual Check Required"
-            $details = "Telnet service is running. Authentication method (NTLM vs. Password) requires manual verification (tlntadmn config)."
-        } else {
-            $details = "Telnet service is installed but not running. (Good)"
-        }
-    }
-    catch {
-        $result = "Error"
-        $details = "An error occurred while checking Telnet service status: $($_.Exception.Message)"
-    }
+    # For Windows Server 2019, this check is considered not applicable.
+    # The script will always return 'Good' with a specific detail message.
 
     $output = @{
         CheckItem = $checkItem

@@ -31,17 +31,20 @@ function Test-W62SNMPAccessControlSetting {
             $details = "SNMP service is installed but not running. (Good)"
         } else {
             # SNMP service is running, check access control settings
-            $registryPath = "HKLM:\SYSTEM\CurrentControlSet\Services\SNMP\Parameters"
-            $propertyName = "PermittedManagers"
+            $registryPath = "HKLM:\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\PermittedManagers"
 
+            # 1. 'PermittedManagers' 키가 존재하는지 확인
             if (Test-Path $registryPath) {
-                $permittedManagers = (Get-ItemProperty -Path $registryPath -Name $propertyName -ErrorAction SilentlyContinue).$propertyName
+                # 2. 키가 존재하면, 등록된 IP 목록(속성)을 가져옴
+                # PowerShell 자체 속성(PS*)을 제외하여 실제 IP 목록만 필터링
+                $properties = Get-ItemProperty -Path $registryPath
+                $allowed_ips = $properties.PSObject.Properties.Name | Where-Object { $_ -notmatch "^(PSPath|PSParentPath|PSChildName|PSDrive|PSProvider)$" }
 
-                if ($null -eq $permittedManagers -or $permittedManagers.Count -eq 0) {
+                if ($null -eq $allowed_ips -or $allowed_ips.Count -eq 0) {
                     $result = "Vulnerable"
                     $details = "SNMP service is running and configured to accept packets from all hosts (PermittedManagers is not set or empty)."
                 } else {
-                    $details = "SNMP service is running and configured to accept packets only from specific hosts: $($permittedManagers -join ', ')."
+                    $details = "SNMP service is running and configured to accept packets only from specific hosts: $($allowed_ips -join ', ')."
                 }
             } else {
                 $result = "Vulnerable"

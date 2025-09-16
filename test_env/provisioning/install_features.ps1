@@ -86,7 +86,7 @@ function Verify-Installation {
     Write-Host "Verifying installation status..."
     Write-Host "================================================"
 
-    $features = @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS")
+    $features = @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "SNMP-WMI-Provider")
     foreach ($featureName in $features) {
         $feature = Get-WindowsFeature -Name $featureName
         Write-Host "$($feature.DisplayName) Installed: $($feature.Installed)"
@@ -125,7 +125,7 @@ Install-PowerShellModules
 
 Configure-WinRM
 
-Install-WindowsFeatures -FeatureNames @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "Telnet-Client", "Web-ASP", "Web-Mgmt-Tools", "BitLocker")
+Install-WindowsFeatures -FeatureNames @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "Telnet-Client", "Web-ASP", "Web-Mgmt-Tools", "BitLocker", "SNMP-WMI-Provider")
 
 # Set W3SVC to start automatically
 try {
@@ -135,3 +135,5 @@ try {
 }
 
 Verify-Installation
+Restart-Computer -Force
+# Note: The script will restart the computer to finalize installations.

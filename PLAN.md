@@ -1,32 +1,32 @@
-# Project Plan
+# 프로젝트 계획
 
-This document outlines the high-level plan and ongoing progress for the Win-KICS-Checker project.
+이 문서는 Win-KICS-Checker 프로젝트의 상위 수준 계획과 진행 상황을 간략하게 설명합니다.
 
-## Phase 1: Initial Setup and Core Diagnostics (Completed)
-- Basic PowerShell script structure for diagnostics.
-- Local execution of individual diagnostic scripts.
-- Basic reporting (CSV, JSON).
+## 1단계: 초기 설정 및 핵심 진단 (완료)
+- 진단을 위한 기본 PowerShell 스크립트 구조.
+- 개별 진단 스크립트의 로컬 실행.
+- 기본 보고 (CSV, JSON).
 
-## Phase 2: Remote Diagnostics and Enhanced Reporting (In Progress)
-- Implement remote execution capabilities for diagnostic scripts.
-- Centralized logging for remote diagnostics.
-- Enhanced reporting with summary and detailed views.
-- Integration with Vagrant for test environment provisioning.
+## 2단계: 원격 진단 및 향상된 보고 (진행 중)
+- 진단 스크립트를 위한 원격 실행 기능 구현.
+- 원격 진단을 위한 중앙 집중식 로깅.
+- 요약 및 상세 보기를 포함한 향상된 보고.
+- 테스트 환경 프로비저닝을 위한 Vagrant 통합.
 
-## Phase 3: Expanding Diagnostic Coverage (Ongoing)
-- Implement diagnostics for all KICS (Korea Information Security Certification) items.
-- Focus on specific categories (e.g., Account Management, Service Management).
+## 3단계: 진단 범위 확장 (진행 중)
+- 모든 KICS(한국정보보호인증) 항목에 대한 진단 구현.
+- 특정 범주(예: 계정 관리, 서비스 관리)에 중점.
 
-### Diagnostic Script Updates (2025-09-15)
+### 진단 스크립트 업데이트 (2025-09-15)
 
-- **W-38 (Screensaver Setting):** Modified to use direct registry check for `ScreenSaveActive`, `ScreenSaverIsSecure`, and `ScreenSaveTimeOut`.
-- **W-40 (Force Shutdown Remote System):** Restored original logic to check assigned users for `SeRemoteShutdownPrivilege`, and removed `/areas SECURITYPOLICY` from `secedit /export` command.
-- **W-44 (Allow Removable Media Format Eject):** Changed check to use `allocateDASD` registry value.
-- **W-46 (Network Access: Do Not Allow Anonymous Enumeration of SAM Accounts and Shares):** Script updated by user for proper checking.
-- **W-47 (Account Lockout Duration Setting):** Modified to compare lockout duration and reset counter directly in minutes (60 minutes recommended).
-- **W-50 (Maximum Password Age):** Modified to compare password age directly in days (90 days recommended).
-- **W-52 (Do Not Display Last User Name):** Script updated by user for proper checking.
-- **W-53 (Allow Local Logon):** Script updated by user for proper checking.
-- **test_env/provisioning/install_features.ps1:** Added BitLocker feature installation.
+- **W-38 (화면 보호기 설정):** `ScreenSaveActive`, `ScreenSaverIsSecure`, `ScreenSaveTimeOut`에 대한 직접 레지스트리 확인을 사용하도록 수정되었습니다.
+- **W-40 (원격 시스템 강제 종료):** `SeRemoteShutdownPrivilege`에 할당된 사용자를 확인하는 원래 로직을 복원하고 `secedit /export` 명령에서 `/areas SECURITYPOLICY`를 제거했습니다.
+- **W-44 (이동식 미디어 포맷 및 꺼내기 허용):** `allocateDASD` 레지스트리 값을 사용하도록 확인 방법을 변경했습니다.
+- **W-46 (네트워크 액세스: SAM 계정 및 공유의 익명 열거 허용 안 함):** 올바른 확인을 위해 사용자가 스크립트를 업데이트했습니다.
+- **W-47 (계정 잠금 기간 설정):** 잠금 기간과 재설정 카운터를 직접 분 단위로 비교하도록 수정되었습니다(60분 권장).
+- **W-50 (최대 암호 사용 기간):** 암호 사용 기간을 직접 일 단위로 비교하도록 수정되었습니다(90일 권장).
+- **W-52 (마지막 사용자 이름 표시 안 함):** 올바른 확인을 위해 사용자가 스크립트를 업데이트했습니다.
+- **W-53 (로컬 로그온 허용):** 올바른 확인을 위해 사용자가 스크립트를 업데이트했습니다.
+- **test_env/provisioning/install_features.ps1:** BitLocker 기능 설치를 추가했습니다.
 
-Updated diagnostic report files in `reports/` directory.
+`reports/` 디렉터리의 진단 보고서 파일을 업데이트했습니다.

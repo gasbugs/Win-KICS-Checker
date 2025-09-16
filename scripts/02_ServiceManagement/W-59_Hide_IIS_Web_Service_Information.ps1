@@ -1,11 +1,11 @@
 <#
 .SYNOPSIS
-    Checks if IIS web service information (like Server and X-Powered-By headers) is hidden.
+    Checks the IIS HTTP error mode to ensure custom error pages are used.
 
 .DESCRIPTION
-    This script attempts to connect to the local IIS web server and inspects the HTTP response headers.
-    If 'Server' or 'X-Powered-By' headers are present, it indicates that web service information is being exposed,
-    which is considered a vulnerability. If IIS is not running or not installed, the check will report as 'Not Applicable'.
+    This script checks the 'errorMode' property within the 'system.webServer/httpErrors' configuration section.
+    The recommended setting is 'Custom' to avoid leaking sensitive information through detailed or default error pages.
+    Any other setting (e.g., 'DetailedLocalOnly', 'Detailed') is considered a vulnerability.
 
 .OUTPUTS
     A JSON object indicating the check item, category, result, and details.
@@ -26,25 +26,26 @@ function Test-W59HideIISWebServiceInformation {
     try {
         # Check if WebAdministration module is available, which indicates IIS is likely installed.
         if (-not (Get-Module -ListAvailable -Name WebAdministration)) {
-            # This message is the default, so no change needed if module is not found.
             $result | ConvertTo-Json -Depth 4
             return
         }
         
         Import-Module WebAdministration -ErrorAction Stop
 
-        # Check the removeServerHeader property directly
-        $config = Get-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' -Filter "system.webServer/security/requestFiltering" -Name "removeServerHeader" -ErrorAction SilentlyContinue
+        # Check the errorMode property
+        $config = Get-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' -Filter "system.webServer/httpErrors" -Name "errorMode" -ErrorAction SilentlyContinue
 
         if ($null -eq $config) {
-            # This can happen if IIS is not installed or the section is not accessible.
-             $result.Details = "Could not retrieve IIS configuration for removeServerHeader. IIS might not be fully installed."
-        } elseif ($config.Value -eq $true) {
-            $result.Result = "Good"
-            $result.Details = "IIS is configured to hide the web service information (removeServerHeader is true)."
+            $result.Details = "Could not retrieve IIS configuration for httpErrors/errorMode. IIS might not be fully installed."
         } else {
-            $result.Result = "Vulnerable"
-            $result.Details = "IIS is not configured to hide the web service information (removeServerHeader is false)."
+            $errorMode = $config
+            if ($errorMode -eq 'Custom') {
+                $result.Result = "Good"
+                $result.Details = "IIS is configured with custom error pages (errorMode is 'Custom')."
+            } else {
+                $result.Result = "Vulnerable"
+                $result.Details = "IIS errorMode is set to '$errorMode'. It is recommended to use 'Custom' to avoid leaking information."
+            }
         }
     } catch {
         # Catch errors from Import-Module or other unexpected issues

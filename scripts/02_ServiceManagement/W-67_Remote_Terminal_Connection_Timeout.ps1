@@ -22,27 +22,40 @@ function Test-W67RemoteTerminalConnectionTimeout {
     $maxRecommendedIdleTimeMs = 1800000 # 30 minutes in milliseconds
 
     try {
-        $registryPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp"
-        $propertyName = "MaxIdleTime"
-        
-        if (Test-Path $registryPath) {
-            $maxIdleTime = (Get-ItemProperty -Path $registryPath -Name $propertyName -ErrorAction SilentlyContinue).$propertyName
+        $termService = Get-Service -Name TermService -ErrorAction SilentlyContinue
 
-            if ($null -eq $maxIdleTime) {
+        if (-not $termService -or $termService.Status -ne 'Running') {
+            $details = "Remote Desktop Services (TermService) is not running or not installed. (Good)"
+        } else {
+            $propertyName = "MaxIdleTime"
+            $idleTime = $null
+
+            # 1. Check Group Policy (GPO) path first
+            $policyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services"
+            if (Test-Path $policyPath) {
+                $idleTime = (Get-ItemProperty -Path $policyPath -Name $propertyName -ErrorAction SilentlyContinue).$propertyName
+            }
+
+            # 2. If no value from policy, check RDP direct setting path
+            if ($null -eq $idleTime) {
+                $rdpPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp"
+                if (Test-Path $rdpPath) {
+                    $idleTime = (Get-ItemProperty -Path $rdpPath -Name $propertyName -ErrorAction SilentlyContinue).$propertyName
+                }
+            }
+
+            if ($null -eq $idleTime) {
                 $result = "Vulnerable"
-                $details = "'MaxIdleTime' registry value not found at '$registryPath'. Idle sessions might not be disconnected."
-            } elseif ($maxIdleTime -eq 0) {
+                $details = "Remote terminal connection timeout (MaxIdleTime) is not configured. Idle sessions might not be disconnected."
+            } elseif ($idleTime -eq 0) {
                 $result = "Vulnerable"
                 $details = "Remote terminal connection timeout (MaxIdleTime) is set to 0 (never disconnect)."
-            } elseif ($maxIdleTime -le $maxRecommendedIdleTimeMs) {
-                $details = "Remote terminal connection timeout (MaxIdleTime) is set to $($maxIdleTime / 60000) minutes (Recommended: <= 30 minutes)."
+            } elseif ($idleTime -le $maxRecommendedIdleTimeMs) {
+                $details = "Remote terminal connection timeout (MaxIdleTime) is set to $($idleTime / 60000) minutes (Recommended: <= 30 minutes)."
             } else {
                 $result = "Vulnerable"
-                $details = "Remote terminal connection timeout (MaxIdleTime) is set to $($maxIdleTime / 60000) minutes, which is greater than the recommended 30 minutes."
+                $details = "Remote terminal connection timeout (MaxIdleTime) is set to $($idleTime / 60000) minutes, which is greater than the recommended 30 minutes."
             }
-        } else {
-            $result = "Error"
-            $details = "Registry path '$registryPath' not found. Terminal Services might not be installed or configured."
         }
     }
     catch {

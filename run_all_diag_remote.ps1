@@ -2,6 +2,7 @@
 # This script executes all diagnostic PowerShell scripts and collects their results.
 
 param(
+    [string]$ChecksToRun = 'all', # 실행할 진단 항목 지정 (예: "1,3,10-15", "all")
     [string]$ComputerName = $env:COMPUTERNAME, # Default to local computer name
     [int]$Port = 5986, # Default to HTTPS port
     [string]$Username,
@@ -41,25 +42,14 @@ if (Test-Path $commonFunctionsPath) {
 
 # Create credential object if username is provided
 $credential = $null
-$session = $null
 if ($Username) {
     Write-Host "Using provided credentials for $Username..."
     $securePassword = ConvertTo-SecureString $Password -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential ($Username, $securePassword)
-
-    Write-Host "Creating PSSession to https://${ComputerName}:${Port}..."
-    $sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
-    try {
-        $session = New-PSSession -ConnectionUri "https://${ComputerName}:${Port}" -Credential $credential -SessionOption $sessionOption
-        Write-Host "PSSession created successfully."
-    } catch {
-        Write-Error "Failed to create PSSession: $($_.Exception.Message)"
-        exit 1
-    }
 }
 
-# List of diagnostic scripts to run (relative to project root)
-$diagnosticScripts = @(
+# List of all available diagnostic scripts
+$allAvailableScripts = @(
     "scripts\01_AccountManagement\W-01_Administrator_Rename.ps1",
     "scripts\01_AccountManagement\W-02_Guest_Account_Disable.ps1",
     "scripts\01_AccountManagement\W-03_Unnecessary_Account_Removal.ps1",
@@ -92,10 +82,10 @@ $diagnosticScripts = @(
     "scripts\02_ServiceManagement\W-18_IIS_DB_Connection_Vulnerability_Check.ps1",
     "scripts\02_ServiceManagement\W-19_IIS_Virtual_Directory_Deletion.ps1",
     "scripts\02_ServiceManagement\W-20_IIS_Data_File_ACL_Application.ps1",
-    "scripts\02_ServiceManagement\W-21_IIS_Unused_Script_Mapping_Removal.ps1", # Added W-21
-    "scripts\02_ServiceManagement\W-22_IIS_Exec_Command_Shell_Call_Diagnosis.ps1", # Added W-22
-    "scripts\02_ServiceManagement\W-23_IIS_WebDAV_Deactivation.ps1", # Added W-23
-    "scripts\02_ServiceManagement\W-24_NetBIOS_Binding_Service_Operation_Check.ps1", # Added W-24
+    "scripts\02_ServiceManagement\W-21_IIS_Unused_Script_Mapping_Removal.ps1",
+    "scripts\02_ServiceManagement\W-22_IIS_Exec_Command_Shell_Call_Diagnosis.ps1",
+    "scripts\02_ServiceManagement\W-23_IIS_WebDAV_Deactivation.ps1",
+    "scripts\02_ServiceManagement\W-24_NetBIOS_Binding_Service_Operation_Check.ps1",
     "scripts\02_ServiceManagement\W-25_FTP_Service_Operation_Check.ps1",
     "scripts\02_ServiceManagement\W-26_FTP_Directory_Access_Permission_Setting.ps1",
     "scripts\02_ServiceManagement\W-27_Anonymous_FTP_Prohibition.ps1",
@@ -113,7 +103,7 @@ $diagnosticScripts = @(
     "scripts\02_ServiceManagement\W-65_Telnet_Security_Setting.ps1",
     "scripts\02_ServiceManagement\W-66_Remove_Unnecessary_ODBC_OLEDB.ps1",
     "scripts\02_ServiceManagement\W-67_Remote_Terminal_Connection_Timeout.ps1",
-    "scripts\02_ServiceManagement\W-68_Check_Suspicious_Scheduled_Tasks.ps1"
+    "scripts\02_ServiceManagement\W-68_Check_Suspicious_Scheduled_Tasks.ps1",
     "scripts\03_PatchManagement\W-32_Apply_Latest_Hot_Fix.ps1",
     "scripts\03_PatchManagement\W-33_Antivirus_Program_Update.ps1",
     "scripts\03_PatchManagement\W-69_System_Logging_Setting.ps1",
@@ -144,13 +134,74 @@ $diagnosticScripts = @(
     "scripts\05_SecurityManagement\W-82_Use_Windows_Authentication_Mode.ps1"
 )
 
+
+# ====================[ 수정된 부분 시작 ]====================
+$diagnosticScripts = @() # 최종 실행할 스크립트 목록 (초기화)
+
+if ($ChecksToRun.ToLower() -eq 'all') {
+    Write-Host "Running all diagnostic checks."
+} else {
+    # 1. 파라미터 분석 (예: "1,3,10-15")
+    $targetCheckNumbers = [System.Collections.Generic.List[int]]::new()
+    $parts = $ChecksToRun.Split(',')
+    foreach ($part in $parts) {
+        if ($part.Contains('-')) {
+            $range = $part.Split('-')
+            if ($range.Count -eq 2) {
+                try {
+                    $start = [int]$range[0]
+                    $end = [int]$range[1]
+                    $start..$end | ForEach-Object { $targetCheckNumbers.Add($_) }
+                } catch {
+                    Write-Warning "Invalid range specified: $part"
+                }
+            }
+        } else {
+            try {
+                $targetCheckNumbers.Add([int]$part)
+            } catch {
+                Write-Warning "Invalid number specified: $part"
+            }
+        }
+    }
+    $uniqueTargetNumbers = $targetCheckNumbers | Sort-Object -Unique
+    $diagnosticScripts = $uniqueTargetNumbers | ForEach-Object {"W-$_"}
+    
+    # # 2. 실행할 스크립트 필터링
+    # $diagnosticScripts = $allAvailableScripts | Where-Object {($_) -match 'W-(\d+)' -and ($uniqueTargetNumbers -contains [int]$Matches[1])}
+
+    Write-Host "Running selected checks: $($diagnosticScripts -join ', ')"
+    # Write-Host "Type of uniqueTargetNumbers: $($uniqueTargetNumbers.GetType())"
+    # Write-Host "Type of diagnosticScripts: $($diagnosticScripts.GetType())"
+    # Write-Host "Number of scripts to run: $($diagnosticScripts.Count)"
+    # Write-Host "Scripts to run: $($diagnosticScripts -join ', ')"
+    # $allAvailableScripts | ForEach-Object { Write-Host "Available script: $_" }
+
+    if ( $uniqueTargetNumbers.Count -eq 0) {
+        Write-Warning "No matching diagnostic scripts found for the specified checks. Exiting."
+        Stop-Transcript
+        exit 1
+    }
+}
+Write-Host "Scripts to be executed:"
+
 $allResults = @()
 $combinedScriptContent = $commonFunctionsContent # Start with common functions
 $combinedScriptContent += "`n`$WarningPreference = 'SilentlyContinue'`nImport-Module SmbShare -ErrorAction SilentlyContinue" # Import SmbShare module for W-07
 
-Write-Host "Starting all diagnostic checks..."
+Write-Host "Starting selected diagnostic checks..."
 
-foreach ($scriptPath in $diagnosticScripts) {
+foreach ($scriptPath in $allAvailableScripts) {
+    if ($ChecksToRun.ToLower() -ne 'all' -and $scriptPath -match '(W-\d+)') {
+        $extractedPattern = $Matches[1]
+        if ($diagnosticScripts -contains $extractedPattern) {
+            Write-Host "Result: '$extractedPattern' is included in the allowed list. (OK)" -ForegroundColor Green
+        } else {
+            #Write-Host "Result: '$extractedPattern' is not included in the allowed list. (Ignored)" -ForegroundColor Yellow
+            continue
+        }
+    }
+
     $fullScriptPath = Join-Path $PSScriptRoot $scriptPath
     if (Test-Path $fullScriptPath) {
         $combinedScriptContent += "`n" + (Get-Content $fullScriptPath -Raw) + "`n"
@@ -161,11 +212,18 @@ foreach ($scriptPath in $diagnosticScripts) {
 
 # Prepare Invoke-Command parameters
 $invokeCommandParams = @{
+    ComputerName = $ComputerName
+    Port = $Port
+    Credential = $credential
+    UseSSL = $true # Assuming HTTPS is always used for remote
+    SessionOption = (New-PSSessionOption -SkipCACheck -SkipCNCheck -SkipRevocationCheck) # Recreate SessionOption directly
     ScriptBlock = {
         # Execute the combined script content
         # Each diagnostic script is expected to output JSON.
         # Collect all JSON outputs and combine them into a single array.
-        $results = @()
+        $results = @(
+            #Get-WinEvent -ListLog * | Where-Object { $_.IsEnabled } | Select-Object -ExpandProperty LogName
+            )
         try {
             Invoke-Expression $using:combinedScriptContent | ForEach-Object {
                 # Assuming each script outputs a single JSON object or an array of JSON objects
@@ -193,14 +251,9 @@ $invokeCommandParams = @{
     }
 }
 
-if ($session) {
-    $invokeCommandParams.Session = $session
-} else {
-    $invokeCommandParams.ComputerName = $ComputerName
-}
-
 # Execute the combined script content on the target computer
 try {
+    write-host "Executing combined script on $invokeCommandParams..."
     $scriptOutputRaw = Invoke-Command @invokeCommandParams
     # Ensure $scriptOutputRaw is treated as a single string for ConvertFrom-Json
     $scriptOutputJson = ($scriptOutputRaw | Out-String)
@@ -256,12 +309,7 @@ try {
     $allResults += $errorResult
 }
 
-# Remove the PSSession after all scripts have run
-if ($session) {
-    Write-Host "Removing PSSession..."
-    Remove-PSSession $session
-    Write-Host "PSSession removed."
-}
+# No PSSession removal needed
 
 Write-Host "`n--- All diagnostic checks completed on $($ComputerName) ---"
 
@@ -322,13 +370,13 @@ foreach ($r in $allResults) {
 
 Write-Host "`n--- Diagnostic Summary ---"
 Write-Host "========================="
-Write-Host "Vulnerable              : $($summary.Vulnerable)"
-Write-Host "Good                    : $($summary.Good)"
-Write-Host "Manual Check Required   : $($summary.'Manual Check Required')"
-Write-Host "Not Applicable          : $($summary.'Not Applicable')"
-Write-Host "Error                   : $($summary.Error)"
+Write-Host "Vulnerable                : $($summary.Vulnerable)"
+Write-Host "Good                      : $($summary.Good)"
+Write-Host "Manual Check Required     : $($summary.'Manual Check Required')"
+Write-Host "Not Applicable            : $($summary.'Not Applicable')"
+Write-Host "Error                     : $($summary.Error)"
 Write-Host "--------------------------"
-Write-Host "Total Checks            : $($allResults.Count)"
+Write-Host "Total Checks              : $($allResults.Count)"
 Write-Host "========================="
 
 # Save summary to a CSV file
