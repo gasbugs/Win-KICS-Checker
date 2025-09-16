@@ -1,73 +1,62 @@
 <#
 .SYNOPSIS
-    Checks if the 'Microsoft network server: Disconnect clients when logon hours expire' and 'Microsoft network server: Amount of idle time required before suspending session' policies are configured.
+    Checks KISA security item W-74: Microsoft network server: Disconnect clients when logon hours expire.
 
 .DESCRIPTION
-    This script verifies two security policies related to network session management.
-    It ensures that clients are disconnected when logon hours expire and that idle sessions are suspended after 15 minutes,
-    to prevent unauthorized access and resource exhaustion.
-    It uses 'secedit /export' to retrieve the local security policy settings.
+    This script verifies that the security policy to automatically disconnect clients when their logon hours
+    expire is enabled by checking its corresponding registry value.
 
 .OUTPUTS
-    A JSON object indicating the check item, category, result, and details.
+    A JSON object with the check result (Good or Vulnerable) and details.
 #>
-
-function Test-W74IdleTimeBeforeSessionDisconnect {
+function Test-W74_DisconnectOnLogonHourExpire {
     [CmdletBinding()]
     param()
     
+    # --- 점검 기본 정보 ---
     $checkItem = "W-74"
     $category = "Security Management"
-    $result = "Good"
-    $details = @()
-    $recommendedIdleTimeSeconds = 900 # 15 minutes
+    $result = "Good" # 기본 상태를 '양호'로 설정
+    $details = ""
 
     try {
-        $tempFile = [System.IO.Path]::GetTempFileName()
-        secedit /export /cfg $tempFile /areas SECURITYPOLICY /quiet
-        $content = Get-Content $tempFile
-        Remove-Item $tempFile
+        # --- 점검 대상 레지스트리 경로 및 값 ---
+        # "Microsoft 네트워크 서버: 로그온 시간이 만료되면 클라이언트 연결 끊기" 정책의 레지스트리 위치
+        # 값 1 = 사용(Enabled), 값 0 = 사용 안 함(Disabled)
+        $registryPath = "HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters"
+        $valueName = "EnableForcedLogoff"
+        $recommendedValue = 1 # '사용'은 값이 1 (DWORD)
 
-        $disconnectClientsOnLogonHoursExpire = ($content | Select-String -Pattern "DisconnectClientsOnLogonHoursExpire" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
-        $autoDisconnect = ($content | Select-String -Pattern "AutoDisconnect" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
+        # 레지스트리 값 가져오기 (값이 없으면 $null 반환)
+        $currentValue = (Get-ItemProperty -Path $registryPath -Name $valueName -ErrorAction SilentlyContinue).($valueName)
 
-        $isDisconnectClientsGood = ($disconnectClientsOnLogonHoursExpire -eq 1)
-        $isAutoDisconnectGood = ($autoDisconnect -eq $recommendedIdleTimeSeconds)
-
-        if (-not $isDisconnectClientsGood) {
-            $result = "Vulnerable"
-            $details += "'Microsoft network server: Disconnect clients when logon hours expire' policy is not enabled (Current: $disconnectClientsOnLogonHoursExpire). "
-        }
-        if (-not $isAutoDisconnectGood) {
-            $result = "Vulnerable"
-            $details += "'Microsoft network server: Amount of idle time required before suspending session' policy is not set to $recommendedIdleTimeSeconds seconds (Current: $autoDisconnect seconds). "
-        }
-
-        if ($result -eq "Good") {
-            $details = "Both session management policies are configured as recommended."
-        } elseif ($details.Count -gt 0) {
-            $details = "Session management policies are vulnerable: " + ($details -join [Environment]::NewLine)
+        if ($currentValue -eq $recommendedValue) {
+            # 현재 값이 권장 값(1)과 일치하는 경우
+            $result = "Good"
+            $details = "Policy 'Microsoft network server: Disconnect clients when logon hours expire' is set to 'Enabled'. (Current Value: $currentValue)"
         } else {
-            $result = "Error"
-            $details = "Could not retrieve all session management policy settings."
+            # 현재 값이 권장 값과 다르거나 없는 경우
+            $result = "Vulnerable"
+            $currentValueStr = if ($null -eq $currentValue) { "Not Found" } else { $currentValue }
+            $details = "Policy 'Microsoft network server: Disconnect clients when logon hours expire' is not set to 'Enabled'. (Current Value: $currentValueStr)"
         }
     }
     catch {
         $result = "Error"
-        $details = "An error occurred while checking session management policies: $($_.Exception.Message)"
+        $details = "An error occurred while checking the registry: $($_.Exception.Message)"
     }
 
+    # --- 결과를 JSON 형식으로 출력 ---
     $output = @{
         CheckItem = $checkItem
-        Category = $category
-        Result = $result
-        Details = $details
+        Category  = $category
+        Result    = $result
+        Details   = $details
         Timestamp = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
     }
 
-    # Convert to JSON and output
     $output | ConvertTo-Json -Depth 4
 }
 
-# Execute the function
-Test-W74IdleTimeBeforeSessionDisconnect
+# 함수 실행
+Test-W74_DisconnectOnLogonHourExpire
