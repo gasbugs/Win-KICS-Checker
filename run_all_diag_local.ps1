@@ -1,16 +1,28 @@
-# run_all_dig_local.ps1
-# This script executes all diagnostic PowerShell scripts on the local machine.
+# run_all_diag_local.ps1
+# This script executes all diagnostic PowerShell scripts on the local machine and collects their results.
 
-# Set script-level error action to continue on non-terminating errors
-$ErrorActionPreference = 'Continue'
+param(
+    [string]$ChecksToRun = "all" # 실행할 점검 항목 (예: "1,3,10-15", "all")
+)
 
-# Define project root (assuming this script is in the root)
+$ErrorActionPreference = "Continue"
+
 $PSScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$ComputerName = "localhost" # For reporting purposes
+$ComputerName = $env:COMPUTERNAME
+
+# --- Log setup ---
+$logDir = Join-Path $PSScriptRoot "logs"
+if (-not (Test-Path $logDir)) {
+    New-Item -ItemType Directory -Path $logDir | Out-Null
+}
+$logFileName = "diagnostic_log_$(Get-Date -Format 'yyyyMMdd_HHmmss')_$($ComputerName)_local.log"
+$logFilePath = Join-Path $logDir $logFileName
+Start-Transcript -Path $logFilePath
+# --- End Log setup ---
 
 Write-Host "Script started at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Write-Host "Project Root: $PSScriptRoot"
-Write-Host "Target Computer: localhost"
+Write-Host "Target Computer: $ComputerName (local)"
 
 # Read common functions content once
 $commonFunctionsPath = "$PSScriptRoot\scripts\common\common_functions.ps1"
@@ -19,11 +31,10 @@ if (Test-Path $commonFunctionsPath) {
     Write-Host "Common functions loaded."
 } else {
     Write-Warning "Common functions file not found: $commonFunctionsPath"
-    # Handle this error, maybe exit or set a flag
 }
 
-# List of diagnostic scripts to run (relative to project root)
-$diagnosticScripts = @(
+# List of all available diagnostic scripts
+$allAvailableScripts = @(
     "scripts\01_AccountManagement\W-01_Administrator_Rename.ps1",
     "scripts\01_AccountManagement\W-02_Guest_Account_Disable.ps1",
     "scripts\01_AccountManagement\W-03_Unnecessary_Account_Removal.ps1",
@@ -56,10 +67,10 @@ $diagnosticScripts = @(
     "scripts\02_ServiceManagement\W-18_IIS_DB_Connection_Vulnerability_Check.ps1",
     "scripts\02_ServiceManagement\W-19_IIS_Virtual_Directory_Deletion.ps1",
     "scripts\02_ServiceManagement\W-20_IIS_Data_File_ACL_Application.ps1",
-    "scripts\02_ServiceManagement\W-21_IIS_Unused_Script_Mapping_Removal.ps1", # Added W-21
-    "scripts\02_ServiceManagement\W-22_IIS_Exec_Command_Shell_Call_Diagnosis.ps1", # Added W-22
-    "scripts\02_ServiceManagement\W-23_IIS_WebDAV_Deactivation.ps1", # Added W-23
-    "scripts\02_ServiceManagement\W-24_NetBIOS_Binding_Service_Operation_Check.ps1", # Added W-24
+    "scripts\02_ServiceManagement\W-21_IIS_Unused_Script_Mapping_Removal.ps1",
+    "scripts\02_ServiceManagement\W-22_IIS_Exec_Command_Shell_Call_Diagnosis.ps1",
+    "scripts\02_ServiceManagement\W-23_IIS_WebDAV_Deactivation.ps1",
+    "scripts\02_ServiceManagement\W-24_NetBIOS_Binding_Service_Operation_Check.ps1",
     "scripts\02_ServiceManagement\W-25_FTP_Service_Operation_Check.ps1",
     "scripts\02_ServiceManagement\W-26_FTP_Directory_Access_Permission_Setting.ps1",
     "scripts\02_ServiceManagement\W-27_Anonymous_FTP_Prohibition.ps1",
@@ -108,13 +119,64 @@ $diagnosticScripts = @(
     "scripts\05_SecurityManagement\W-82_Use_Windows_Authentication_Mode.ps1"
 )
 
+$diagnosticScripts = @()
+
+if ($ChecksToRun.ToLower() -eq "all") {
+    Write-Host "Running all diagnostic checks."
+} else {
+    $targetCheckNumbers = [System.Collections.Generic.List[int]]::new()
+    $parts = $ChecksToRun.Split(',')
+    foreach ($part in $parts) {
+        if ($part.Contains('-')) {
+            $range = $part.Split('-')
+            if ($range.Count -eq 2) {
+                try {
+                    $start = [int]$range[0]
+                    $end = [int]$range[1]
+                    $start..$end | ForEach-Object { $targetCheckNumbers.Add($_) }
+                } catch {
+                    Write-Warning "Invalid range specified: $part"
+                }
+            }
+        } else {
+            try {
+                $targetCheckNumbers.Add([int]$part)
+            } catch {
+                Write-Warning "Invalid number specified: $part"
+            }
+        }
+    }
+    $uniqueTargetNumbers = $targetCheckNumbers | Sort-Object -Unique
+    $diagnosticScripts = $uniqueTargetNumbers | ForEach-Object { "W-{0:D2}" -f $_ }
+
+    Write-Host "Running selected checks: $($diagnosticScripts -join ', ')"
+
+    if ($uniqueTargetNumbers.Count -eq 0) {
+        Write-Warning "No matching diagnostic scripts found for the specified checks. Exiting."
+        Stop-Transcript | Out-Null
+        return
+    }
+}
+
+Write-Host "Scripts to be executed:"
+
 $allResults = @()
-$combinedScriptContent = $commonFunctionsContent # Start with common functions
-$combinedScriptContent += "`n`$WarningPreference = 'SilentlyContinue'`nImport-Module SmbShare -ErrorAction SilentlyContinue" # Import SmbShare module for W-07
+$processedResultsForCsv = @()
+$combinedScriptContent = $commonFunctionsContent
+$combinedScriptContent += "`n`$WarningPreference = 'SilentlyContinue'`nImport-Module SmbShare -ErrorAction SilentlyContinue"
 
-Write-Host "Starting all diagnostic checks..."
+Write-Host "Starting selected diagnostic checks..."
 
-foreach ($scriptPath in $diagnosticScripts) {
+foreach ($scriptPath in $allAvailableScripts) {
+    if ($ChecksToRun.ToLower() -ne "all" -and $scriptPath -match "(W-\d+)") {
+        $extractedPattern = $Matches[1]
+        if ($diagnosticScripts -contains $extractedPattern) {
+            Write-Host "Result: '$extractedPattern' is included in the allowed list. (OK)" -ForegroundColor Green
+        } else {
+            continue
+        }
+    }
+
     $fullScriptPath = Join-Path $PSScriptRoot $scriptPath
     if (Test-Path $fullScriptPath) {
         $combinedScriptContent += "`n" + (Get-Content $fullScriptPath -Raw) + "`n"
@@ -123,46 +185,21 @@ foreach ($scriptPath in $diagnosticScripts) {
     }
 }
 
-# Define the script block to be executed
-$scriptBlock = {
-    # Execute the combined script content
-    # Each diagnostic script is expected to output JSON.
-    # Collect all JSON outputs and combine them into a single array.
-    param($combinedScriptContent)
-    $results = @()
-    try {
-        Invoke-Expression $combinedScriptContent | ForEach-Object {
-            # Assuming each script outputs a single JSON object or an array of JSON objects
-            # If it's a single object, ConvertFrom-Json will return an object
-            # If it's an array of objects, ConvertFrom-Json will return an array
-            $jsonOutput = $_ | ConvertFrom-Json -ErrorAction Stop
-            if ($jsonOutput -is [System.Array]) {
-                $results += $jsonOutput
-            } else {
-                $results += $jsonOutput
-            }
-        }
-    } catch {
-        # Handle errors during script execution
-        $errorResult = @{
-            CheckItem = "CombinedScriptExecution"
-            Category = "Error"
-            Result = "Error"
-            Details = "Script execution failed: $($_.Exception.Message)"
-            Timestamp = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
-        }
-        $results += $errorResult
-    }
-    $results | ConvertTo-Json -Depth 100 # Output combined results as JSON
-}
-
-# Execute the script block locally
 try {
-    $scriptOutputJson = & $scriptBlock -combinedScriptContent $combinedScriptContent
-    $allResults = $scriptOutputJson | ConvertFrom-Json -ErrorAction Stop
-    $processedResultsForCsv = @()
+    Write-Host "Executing combined script locally..."
+    $executionResults = @()
+    Invoke-Expression $combinedScriptContent | ForEach-Object {
+        $jsonOutput = $_ | ConvertFrom-Json -ErrorAction Stop
+        if ($jsonOutput -is [System.Array]) {
+            $executionResults += $jsonOutput
+        } else {
+            $executionResults += $jsonOutput
+        }
+    }
+
+    $allResults = $executionResults
+
     foreach ($result in $allResults) {
-        # Create a new object for CSV to flatten nested properties
         $csvObject = [PSCustomObject]@{
             CheckItem = $result.CheckItem
             Category = $result.Category
@@ -171,7 +208,6 @@ try {
             Timestamp = $result.Timestamp
         }
 
-        # Process UserAccounts for W-03
         if ($result.CheckItem -eq "W-03" -and $result.UserAccounts) {
             $userAccountDetails = $result.UserAccounts | ForEach-Object {
                 "Name: $($_.Name), Enabled: $($_.Enabled), Description: $($_.Description)"
@@ -179,15 +215,13 @@ try {
             $csvObject.Details = "$($csvObject.Details) User Accounts: $($userAccountDetails -join '; ')"
         }
 
-        # Process GroupMembers for W-06
         if ($result.CheckItem -eq "W-06" -and $result.GroupMembers) {
             $groupMemberDetails = $result.GroupMembers | ForEach-Object {
                 "Name: $($_.Name), ObjectClass: $($_.ObjectClass)"
             }
             $csvObject.Details = "$($csvObject.Details) Group Members: $($groupMemberDetails -join '; ')"
         }
-        
-        # Process W-68 for CSV output - shorten details
+
         if ($result.CheckItem -eq "W-68" -and $result.ScheduledTasks) {
             $taskCount = $result.ScheduledTasks.Count
             $csvObject.Details = "Found $taskCount scheduled tasks. Detailed information is available in the JSON report."
@@ -195,7 +229,7 @@ try {
                 $csvObject.Details = "Error checking scheduled tasks. Detailed error in JSON report."
             }
         }
-        
+
         $processedResultsForCsv += $csvObject
         Write-Host "Result for $($result.CheckItem): $($result.Result)"
     }
@@ -206,18 +240,16 @@ try {
         Category = "Error"
         Result = "Error"
         Details = "Combined script execution failed locally: $($_.Exception.Message)"
-        Timestamp = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
+        Timestamp = (Get-Date -Format "yyyy-MM-dd HH:mm:ss")
     }
     $allResults += $errorResult
 }
 
-Write-Host "`n--- All diagnostic checks completed on localhost ---"
+Write-Host "`n--- All diagnostic checks completed on $($ComputerName) ---"
 
-# Output all collected results to stdout
 $allResultsJson = $allResults | ConvertTo-Json -Depth 100
 Write-Output $allResultsJson
 
-# Save results to a file in the reports directory
 $reportDir = Join-Path $PSScriptRoot "reports"
 if (-not (Test-Path $reportDir)) {
     New-Item -ItemType Directory -Path $reportDir | Out-Null
@@ -229,19 +261,26 @@ $allResultsJson | Set-Content $reportFilePath -Encoding UTF8
 
 Write-Host "`nFull report saved to: $($reportFilePath)"
 
-# Save results to a CSV file
+$latestReportFileName = "diagnostic_report_latest_$($ComputerName).json"
+$latestReportFilePath = Join-Path $reportDir $latestReportFileName
+$allResultsJson | Set-Content $latestReportFilePath -Encoding UTF8
+Write-Host "Latest JSON report saved to: $($latestReportFilePath)"
+
 $csvReportFileName = "diagnostic_report_$(Get-Date -Format 'yyyyMMdd_HHmmss')_$($ComputerName).csv"
 $csvReportFilePath = Join-Path $reportDir $csvReportFileName
 
-# Convert to CSV
 if ($processedResultsForCsv) {
     $processedResultsForCsv | ConvertTo-Csv -NoTypeInformation | Set-Content $csvReportFilePath -Encoding UTF8
     Write-Host "Full report saved to: $($csvReportFilePath)"
+
+    $latestCsvReportFileName = "diagnostic_report_latest_$($ComputerName).csv"
+    $latestCsvReportFilePath = Join-Path $reportDir $latestCsvReportFileName
+    $processedResultsForCsv | ConvertTo-Csv -NoTypeInformation | Set-Content $latestCsvReportFilePath -Encoding UTF8
+    Write-Host "Latest CSV report saved to: $($latestCsvReportFilePath)"
 } else {
     Write-Warning "No results to convert to CSV. CSV file not generated."
 }
 
-# --- Summary Generation ---
 $summary = @{
     Vulnerable = 0
     Good = 0
@@ -258,13 +297,35 @@ foreach ($r in $allResults) {
 
 Write-Host "`n--- Diagnostic Summary ---"
 Write-Host "========================="
-Write-Host "Vulnerable              : $($summary.Vulnerable)"
-Write-Host "Good                    : $($summary.Good)"
-Write-Host "Manual Check Required   : $($summary.'Manual Check Required')"
-Write-Host "Not Applicable          : $($summary.'Not Applicable')"
-Write-Host "Error                   : $($summary.Error)"
+Write-Host "Vulnerable                : $($summary.Vulnerable)"
+Write-Host "Good                      : $($summary.Good)"
+Write-Host "Manual Check Required     : $($summary.'Manual Check Required')"
+Write-Host "Not Applicable            : $($summary.'Not Applicable')"
+Write-Host "Error                     : $($summary.Error)"
 Write-Host "--------------------------"
-Write-Host "Total Checks            : $($allResults.Count)"
+Write-Host "Total Checks              : $($allResults.Count)"
 Write-Host "========================="
 
+$summaryReportFileName = "diagnostic_summary_$(Get-Date -Format 'yyyyMMdd_HHmmss')_$($ComputerName).csv"
+$summaryReportFilePath = Join-Path $reportDir $summaryReportFileName
+
+$summaryObject = [PSCustomObject]@{
+    Vulnerable = $summary.Vulnerable;
+    Good = $summary.Good;
+    ManualCheckRequired = $summary.'Manual Check Required';
+    NotApplicable = $summary.'Not Applicable';
+    Error = $summary.Error;
+    TotalChecks = $allResults.Count
+}
+
+$summaryObject | ConvertTo-Csv -NoTypeInformation | Set-Content $summaryReportFilePath -Encoding UTF8
+Write-Host "Summary report saved to: $($summaryReportFilePath)"
+
+$latestSummaryReportFileName = "diagnostic_summary_latest_$($ComputerName).csv"
+$latestSummaryReportFilePath = Join-Path $reportDir $latestSummaryReportFileName
+$summaryObject | ConvertTo-Csv -NoTypeInformation | Set-Content $latestSummaryReportFilePath -Encoding UTF8
+Write-Host "Latest Summary report saved to: $($latestSummaryReportFilePath)"
+
 Write-Host "Script finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+
+Stop-Transcript
