@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   # gusztavvargadr/windows-server-2019-standard는 가장 널리 사용되는
   # Windows Server 2019 이미지 중 하나입니다.
   #################################################################
-  config.vm.box = "gusztavvargadr/windows-server-2019-standard"
+  config.vm.box = "StefanScherer/windows_2019"
   
   # 게스트 운영체제가 Windows임을 명시적으로 지정합니다.
   config.vm.guest = :windows
