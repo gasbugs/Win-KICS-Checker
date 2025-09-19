@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     This script provisions a Windows Server with base features for security diagnostics testing.
     It performs the following actions:
@@ -75,7 +75,11 @@ function Install-PowerShellModules {
         } else {
             Write-Host "  - IISAdministration module is already installed."
         }
-        Import-Module IISAdministration -ErrorAction SilentlyContinue
+        $iisAdminAssemblyPath = Join-Path $env:SystemRoot "System32\inetsrv\Microsoft.Web.Administration.dll"
+        if (-not (Test-Path $iisAdminAssemblyPath)) {
+            throw "Required Microsoft.Web.Administration.dll was not found at $iisAdminAssemblyPath. Install the Web-Server feature before running module installation."
+        }
+        Import-Module IISAdministration -ErrorAction Stop
     } catch {
         Write-Error "Failed to install PowerShell modules: $_"
     }
@@ -121,11 +125,11 @@ function Verify-Installation {
 }
 
 # --- Main Script Execution ---
-Install-PowerShellModules
-
 Configure-WinRM
 
 Install-WindowsFeatures -FeatureNames @("Web-Server", "Web-Ftp-Server", "SNMP-Service", "DNS", "Telnet-Client", "Web-ASP", "Web-Mgmt-Tools", "BitLocker", "SNMP-WMI-Provider")
+
+Install-PowerShellModules
 
 # Set W3SVC to start automatically
 try {
@@ -137,3 +141,4 @@ try {
 Verify-Installation
 Restart-Computer -Force
 # Note: The script will restart the computer to finalize installations.
+

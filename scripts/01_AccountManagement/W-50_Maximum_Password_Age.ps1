@@ -27,11 +27,18 @@ function Test-W50MaximumPasswordAge {
         $content = Get-Content $tempFile
         Remove-Item $tempFile
 
-        $maximumPasswordAgeSeconds = ($content | Select-String -Pattern "MaximumPasswordAge" | ForEach-Object { $_.ToString().Split('=')[1].Trim() }) -as [int]
-        $maximumPasswordAgeDays = $maximumPasswordAgeSeconds / (24 * 60 * 60)
+        $maximumPasswordAgeRaw = ($content | Select-String -Pattern "MaximumPasswordAge = " | ForEach-Object { $_.ToString().Split("=")[1].Trim() } | Select-Object -First 1)
 
-        # A value of 0 means password never expires, which is vulnerable.
-        if ($maximumPasswordAgeSeconds -eq 0) {
+        if (-not $maximumPasswordAgeRaw) {
+            throw "MaximumPasswordAge setting not found in the exported security policy."
+        }
+
+        $maximumPasswordAgeDays = $maximumPasswordAgeRaw -as [int]
+        if ($null -eq $maximumPasswordAgeDays) {
+            throw "Unable to parse MaximumPasswordAge value: '$maximumPasswordAgeRaw'."
+        }
+
+        if ($maximumPasswordAgeDays -eq 0) {
             $result = "Vulnerable"
             $details = "The 'Maximum password age' policy is set to never expire (Current value: 0 days)."
         } elseif ($maximumPasswordAgeDays -le $maxRecommendedDays) {

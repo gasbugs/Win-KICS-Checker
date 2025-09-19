@@ -172,12 +172,31 @@ function Configure-VulnerableParentPathAccess {
 function Configure-AppCmdHandler {
     Write-Host "Configuring IIS handlers for all websites..."
     try {
-        # Ensure WebAdministration module is loaded
         if (-not (Get-Module -ListAvailable -Name WebAdministration)) {
             Write-Host "  - WebAdministration module not found. IIS might not be installed or module not available."
             return
         }
         Import-Module WebAdministration -ErrorAction Stop
+
+        Write-Host "  - Unlocking 'system.webServer/handlers' section for site-level modifications..."
+        try {
+            Remove-WebConfigurationLock -PSPath 'MACHINE/WEBROOT/APPHOST' -Filter 'system.webServer/handlers' -SectionDefinition -ErrorAction Stop
+            Write-Host "  - Section unlocked successfully."
+        } catch {
+            if ($_.Exception.Message -match 'not locked') {
+                Write-Host "  - Section already unlocked. Continuing."
+            } else {
+                Write-Warning ("  - Failed to unlock section: {0}" -f $_)
+            }
+        }
+
+        Write-Host "  - Allowing handler overrides at the machine scope..."
+        try {
+            Set-WebConfiguration -PSPath 'MACHINE/WEBROOT/APPHOST' -Filter 'system.webServer/handlers' -Metadata overrideModeDefault -Value 'Allow' -ErrorAction Stop
+            Write-Host "  - overrideModeDefault set to 'Allow'."
+        } catch {
+            Write-Warning ("  - Could not set overrideModeDefault to 'Allow': {0}" -f $_)
+        }
 
         $sites = Get-Website
         if ($null -eq $sites) {
@@ -186,35 +205,32 @@ function Configure-AppCmdHandler {
         }
         Write-Host "  - Found $($sites.Count) sites."
 
-        # ASA handler mapping properties
         $asaHandlerProperties = @{
-            name            = "asa-handler-vuln"
-            path            = "*.asa"
-            verb            = "*"
-            modules         = "IsapiModule"
+            name            = 'asa-handler-vuln'
+            path            = '*.asa'
+            verb            = '*'
+            modules         = 'IsapiModule'
             scriptProcessor = "$env:windir\system32\inetsrv\asp.dll"
-            resourceType    = "File"
-            requireAccess   = "Script"
+            resourceType    = 'File'
+            requireAccess   = 'Script'
         }
 
-        # ASAX handler mapping properties
         $asaxHandlerProperties = @{
-            name            = "asax-handler-vuln"
-            path            = "*.asax"
-            verb            = "*"
-            modules         = "IsapiModule"
+            name            = 'asax-handler-vuln'
+            path            = '*.asax'
+            verb            = '*'
+            modules         = 'IsapiModule'
             scriptProcessor = "$env:windir\system32\inetsrv\asp.dll"
-            resourceType    = "File"
-            requireAccess   = "Script"
+            resourceType    = 'File'
+            requireAccess   = 'Script'
         }
 
         foreach ($site in $sites) {
             $targetSiteName = $site.Name
-            
-            # Check if the site has HTTP bindings
+
             $isHttpSite = $false
-            foreach($binding in $site.bindings.collection) {
-                if($binding.protocol -like "http*") {
+            foreach ($binding in $site.bindings.collection) {
+                if ($binding.protocol -like 'http*') {
                     $isHttpSite = $true
                     break
                 }
@@ -227,25 +243,29 @@ function Configure-AppCmdHandler {
 
             Write-Host "--- Configuring handlers for site: $targetSiteName ---"
 
-            # Remove existing handlers to prevent conflicts
-            $handlersToRemove = @("asa-handler-vuln", "asax-handler-vuln")
+            try {
+                Set-WebConfiguration -PSPath 'MACHINE/WEBROOT/APPHOST' -Location $targetSiteName -Filter 'system.webServer/handlers' -Metadata overrideMode -Value 'Allow' -ErrorAction Stop
+                Write-Host "  - Enabled handler override for site: $targetSiteName."
+            } catch {
+                Write-Warning ("  - Could not enable handler override for site {0}: {1}" -f $targetSiteName, $_)
+            }
+
+            $handlersToRemove = @('asa-handler-vuln', 'asax-handler-vuln')
             foreach ($handlerName in $handlersToRemove) {
-                $existingHandler = Get-WebConfiguration -pspath "IIS:\Sites\$targetSiteName" -filter "system.webServer/handlers/add[@name='$handlerName']" -ErrorAction SilentlyContinue
+                $existingHandler = Get-WebConfiguration -PSPath 'MACHINE/WEBROOT/APPHOST' -Location $targetSiteName -Filter "system.webServer/handlers/add[@name='$handlerName']" -ErrorAction SilentlyContinue
                 if ($existingHandler) {
                     Write-Host "  - Removing existing handler mapping: $handlerName from $targetSiteName"
-                    Remove-WebConfigurationProperty -pspath "IIS:\Sites\$targetSiteName" -filter "system.webServer/handlers" -name "." -atElement @{name=$handlerName} -ErrorAction Stop
+                    Remove-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' -Location $targetSiteName -Filter 'system.webServer/handlers' -Name '.' -AtElement @{ name = $handlerName } -ErrorAction Stop
                     Write-Host "  - Successfully removed handler mapping: $handlerName from $targetSiteName"
                 }
             }
 
-            # Add .asa handler
             Write-Host "  - Adding '.asa' handler mapping to '$targetSiteName' site."
-            Add-WebConfigurationProperty -pspath "IIS:\Sites\$targetSiteName" -filter "system.webServer/handlers" -name "." -value $asaHandlerProperties -ErrorAction Stop
+            Add-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' -Location $targetSiteName -Filter 'system.webServer/handlers' -Name '.' -Value $asaHandlerProperties -ErrorAction Stop
             Write-Host "  - '.asa' handler mapping added successfully to '$targetSiteName'."
 
-            # Add .asax handler
             Write-Host "  - Adding '.asax' handler mapping to '$targetSiteName' site."
-            Add-WebConfigurationProperty -pspath "IIS:\Sites\$targetSiteName" -filter "system.webServer/handlers" -name "." -value $asaxHandlerProperties -ErrorAction Stop
+            Add-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' -Location $targetSiteName -Filter 'system.webServer/handlers' -Name '.' -Value $asaxHandlerProperties -ErrorAction Stop
             Write-Host "  - '.asax' handler mapping added successfully to '$targetSiteName'."
         }
 
@@ -254,7 +274,6 @@ function Configure-AppCmdHandler {
         Write-Error "Failed to configure IIS handlers: $_"
     }
 }
-
 function Configure-AnonymousFtp {
     Write-Host "Configuring Anonymous FTP for W-27...";
     try {
@@ -330,4 +349,3 @@ Configure-AppCmdHandler
 Configure-VulnerableParentPathAccess
 
 Configure-VulnerableDnsZoneTransfer
-
