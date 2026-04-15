@@ -1,0 +1,11 @@
+# terraform.tfvars.example
+# 복사 후 terraform.tfvars 로 저장하여 사용
+# cp terraform.tfvars.example terraform.tfvars
+
+project        = "claude-code-malware"
+zone           = "asia-northeast3-a"
+instance_name  = "win-kics-test-2026"
+machine_type   = "n2-standard-4"
+use_spot       = true      # false 로 변경하면 상시 VM
+disk_size_gb   = 60
+winrm_username = "kicstest"
