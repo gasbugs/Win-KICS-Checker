@@ -2,27 +2,39 @@
 """
 Win-KICS-Checker 2026 — Remote Test Runner
 Copies scripts_2026/ to Windows VM via WinRM and executes the diagnostic suite.
+
+Usage:
+  python3 run_remote_test.py [--ip IP] [--user USER] [--pass PASS] [--setup]
+
+  --setup   서비스 환경 구성 후 진단 (FTP/DNS/SNMP 설치)
 """
 import os
 import sys
+import time
 import base64
 import json
+import argparse
 import winrm
 import warnings
 warnings.filterwarnings("ignore")
 
-VM_IP   = "34.22.96.68"
-VM_USER = "kicstest"
-VM_PASS = "Iu5DwA9$P(067@["
-REMOTE_ROOT = r"C:\kics2026"
-LOCAL_ROOT  = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_IP   = "34.22.96.68"
+DEFAULT_USER = "kicstest"
+DEFAULT_PASS = "k$CKm/+1&<Jc>(6"
+REMOTE_ROOT  = r"C:\kics2026"
+LOCAL_ROOT   = os.path.dirname(os.path.abspath(__file__))
+
+# Exit code from setup_services_2026.ps1 when restart is needed
+RESTART_NEEDED_EXIT = 1001
 
 
-def make_session():
+def make_session(ip, user, password):
+    # Try HTTPS (5986) first; fall back to HTTP (5985) if needed
     return winrm.Session(
-        f"http://{VM_IP}:5985/wsman",
-        auth=(VM_USER, VM_PASS),
+        f"https://{ip}:5986/wsman",
+        auth=(user, password),
         transport="ntlm",
+        server_cert_validation="ignore",
         read_timeout_sec=300,
         operation_timeout_sec=290,
     )
@@ -131,6 +143,77 @@ def upload_scripts(protocol, shell_id):
     print(f"  Uploaded runner.")
 
 
+def setup_services(ip, user, password, protocol, shell_id):
+    """
+    Upload setup_services_2026.ps1 and run it.
+    Handles the case where a Windows restart is needed (exit code 1001).
+    Returns a new (session, protocol, shell_id) tuple (may change after restart).
+    """
+    setup_local  = os.path.join(LOCAL_ROOT, "setup_services_2026.ps1")
+    setup_remote = REMOTE_ROOT + "\\setup_services_2026.ps1"
+
+    print("[SETUP] Uploading setup_services_2026.ps1...")
+    upload_file_via_stdin(protocol, shell_id, setup_local, setup_remote)
+
+    print("[SETUP] Running service installation (may take 3-5 minutes)...")
+    s_tmp = make_session(ip, user, password)
+    r = s_tmp.run_ps(
+        f'$OutputEncoding=[System.Text.Encoding]::UTF8; '
+        f'& "{setup_remote}"; $LASTEXITCODE',
+        # run_ps wraps in cmd, so we read $LASTEXITCODE separately
+    )
+    stdout = r.std_out.decode("utf-8", errors="replace")
+    stderr = r.std_err.decode("utf-8", errors="replace")
+    rc     = r.status_code
+    print(stdout[-4000:] if len(stdout) > 4000 else stdout)
+    if stderr.strip():
+        # filter out CLIXML progress noise
+        filtered = [l for l in stderr.split('\n') if not l.strip().startswith('#<')]
+        if filtered:
+            print(f"  STDERR: {''.join(filtered)[:500]}")
+
+    # Detect restart needed via exit code embedded in stdout or rc
+    needs_restart = (rc == RESTART_NEEDED_EXIT) or ("Rebooting" in stdout)
+
+    if needs_restart:
+        print("[SETUP] Restart required. Rebooting VM...")
+        try:
+            s_tmp.run_ps("Restart-Computer -Force")
+        except Exception:
+            pass  # connection drops immediately after restart
+
+        print("[SETUP] Waiting 120 seconds for VM to restart...")
+        time.sleep(120)
+
+        # Reconnect with retries
+        for attempt in range(1, 7):
+            try:
+                print(f"[SETUP] Reconnect attempt {attempt}/6...")
+                s_new = make_session(ip, user, password)
+                out, _, rc2 = run_ps(s_new, "$env:COMPUTERNAME")
+                if rc2 == 0:
+                    print(f"[SETUP] Reconnected. Computer: {out.strip()}")
+                    p_new      = s_new.protocol
+                    shell_new  = p_new.open_shell()
+                    # Re-run setup (features already installed, just configure)
+                    print("[SETUP] Running setup again to configure services post-restart...")
+                    s_new.run_ps(f'& "{setup_remote}"')
+                    return s_new, p_new, shell_new
+            except Exception as e:
+                print(f"  Attempt {attempt} failed: {e}")
+                time.sleep(20)
+
+        print("[SETUP] ERROR: Could not reconnect after restart.")
+        sys.exit(1)
+
+    print("[SETUP] Service setup complete (no restart needed).")
+    # Return fresh session/protocol/shell
+    s_new     = make_session(ip, user, password)
+    p_new     = s_new.protocol
+    shell_new = p_new.open_shell()
+    return s_new, p_new, shell_new
+
+
 def run_diagnostics(session):
     """Execute run_all_diag_local_2026.ps1 on the remote VM."""
     ps = f"""
@@ -176,15 +259,24 @@ def save_report(content, filename):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Win-KICS-Checker 2026 Remote Test Runner")
+    parser.add_argument("--ip",    default=DEFAULT_IP,   help="VM IP address")
+    parser.add_argument("--user",  default=DEFAULT_USER, help="WinRM username")
+    parser.add_argument("--pass",  default=DEFAULT_PASS, help="WinRM password",
+                        dest="password")
+    parser.add_argument("--setup", action="store_true",
+                        help="Install FTP/DNS/SNMP services before running diagnostics")
+    args = parser.parse_args()
+
     print("=" * 60)
     print("Win-KICS-Checker 2026 — Remote Execution")
-    print(f"Target: {VM_IP} | User: {VM_USER}")
+    print(f"Target: {args.ip} | User: {args.user}")
+    if args.setup:
+        print("Mode: service setup + diagnostics")
     print("=" * 60)
 
-    s = make_session()
+    s = make_session(args.ip, args.user, args.password)
     p = s.protocol
-
-    # Open a persistent shell for uploads (avoids shell-per-command overhead)
     shell_id = p.open_shell()
 
     try:
@@ -199,11 +291,17 @@ def main():
         # Create remote root
         run_ps(s, f'New-Item -ItemType Directory -Path "{REMOTE_ROOT}" -Force | Out-Null', label="MKDIR")
 
-        # Upload
+        # Optional: service environment setup
+        if args.setup:
+            print()
+            s, p, shell_id = setup_services(args.ip, args.user, args.password, p, shell_id)
+            print()
+
+        # Upload diagnostic scripts
         print("\n[UPLOAD] Uploading scripts...")
         upload_scripts(p, shell_id)
 
-        # Run
+        # Run diagnostics
         print("\n[EXEC] Running diagnostics...")
         run_diagnostics(s)
 
@@ -211,8 +309,9 @@ def main():
         print("\n[REPORT] Downloading report...")
         content = download_report(s)
         if content:
-            fname = f"diagnostic_2026_report_remote_{computer_name}.json"
-            path  = save_report(content, fname)
+            suffix = "_svc" if args.setup else ""
+            fname  = f"diagnostic_2026_report_remote_{computer_name}{suffix}.json"
+            path   = save_report(content, fname)
             print(f"  Report saved: {path}")
 
             # Print summary

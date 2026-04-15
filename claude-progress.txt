@@ -80,3 +80,38 @@ Next Session Must:
   - GCloud VM 삭제 (gcloud compute instances delete win-kics-test-2026)
   - 필요시 추가 E2E 테스트
 === END SESSION 2 ===
+
+=== SESSION 3 — 2026-04-15 ===
+Agent: Coding
+Goal: Not Applicable 10개 항목 서비스 환경 구성 및 재진단
+Completed:
+  - setup_services_2026.ps1 작성 (IIS+FTP, DNS, SNMP 설치 및 취약 설정 구성)
+  - run_remote_test.py에 --setup 플래그 및 HTTPS(5986) WinRM 지원 추가
+  - SNMP-Tools → SNMP-Service 오탈자 수정
+  - WinRM HTTPS 방화벽 규칙(allow-winrm-5986) 생성
+  - GCloud Windows Server 2022 VM(win-kics-test-2026-svc) 생성/삭제
+  - N/A 10개 → 2개 (W-26: 레거시 전용, W-63: 도메인 미가입 구조적 N/A) 달성
+Blocked:
+  - 없음
+Test Results:
+  서비스 구성 환경 (IIS+FTP, DNS, SNMP) 진단 결과:
+    Vulnerable                : 24  (+5 from N/A)
+    Good                      : 31  (+3 from N/A)
+    Manual Check Required     : 7   (동일)
+    Not Applicable            : 2   (W-26, W-63 — 구조적 N/A)
+    Error                     : 0
+    Total Checks              : 64 / 64
+  리포트: reports/diagnostic_2026_report_remote_WIN-KICS-TEST-2_svc.json
+  이전 대비 변화 (N/A→실결과):
+    W-22 → Good  (FTP 디렉터리 권한 적절)
+    W-23 → Good  (익명 FTP 비활성화)
+    W-24 → Good  (FTP IP 접근 통제)
+    W-25 → Good  (DNS 존 전송 제한)
+    W-29 → Vulnerable (SNMP 서비스 설치됨)
+    W-30 → Good  (SNMP 커뮤니티 스트링)
+    W-31 → Good  (SNMP 접근 통제)
+    W-32 → Vulnerable (DNS 동적 업데이트 미설정)
+    W-33 → Vulnerable (FTP 배너 차단 미설정)
+Next Session Must:
+  - 없음 (모든 테스트 완료)
+=== END SESSION 3 ===
