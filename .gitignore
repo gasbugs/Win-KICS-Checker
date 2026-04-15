@@ -20,3 +20,5 @@ Desktop.ini
 
 # VS Code
 .vscode/
+# 하네스 세션 로그 — 개인 작업 기록이므로 공유하지 않음
+claude-progress.txt

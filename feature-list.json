@@ -1,0 +1,519 @@
+{
+  "schema_version": "1.0",
+  "project": "Win-KICS-Checker-2026",
+  "last_updated": "2026-04-15",
+  "features": [
+    {
+      "id": "W-01",
+      "name": "Administrator 계정 이름 변경 등 보안성 강화",
+      "description": "윈도우 최상위 관리자 계정인 Administrator의 계정명 변경 또는 보안을 고려한 비밀번호 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 상"
+    },
+    {
+      "id": "W-02",
+      "name": "Guest 계정 비활성화",
+      "description": "Guest 계정 비활성화 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 상"
+    },
+    {
+      "id": "W-03",
+      "name": "불필요한 계정 제거",
+      "description": "불필요한 계정 존재 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 상"
+    },
+    {
+      "id": "W-04",
+      "name": "계정 잠금 임계값 설정",
+      "description": "계정 잠금 임계값 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 상"
+    },
+    {
+      "id": "W-05",
+      "name": "해독 가능한 암호화를 사용하여 암호 저장 해제",
+      "description": "해독 가능한 암호화 사용 암호 저장 해제 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 상"
+    },
+    {
+      "id": "W-06",
+      "name": "관리자 그룹에 최소한의 사용자 포함",
+      "description": "관리자 그룹에 최소한의 사용자만 포함되어 있는지 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 상"
+    },
+    {
+      "id": "W-07",
+      "name": "Everyone 사용 권한을 익명 사용자에게 적용",
+      "description": "Everyone 사용 권한의 익명 사용자 적용 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 중"
+    },
+    {
+      "id": "W-08",
+      "name": "계정 잠금 기간 설정",
+      "description": "계정 잠금 기간 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 중"
+    },
+    {
+      "id": "W-09",
+      "name": "비밀번호 관리정책 설정",
+      "description": "비밀번호 복잡성, 최소길이, 최대사용기간, 최소사용기간, 암호기억 등 통합 비밀번호 정책 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 상 / 2021의 W-48,49,50,51,55를 통합"
+    },
+    {
+      "id": "W-10",
+      "name": "마지막 사용자 이름 표시 안 함",
+      "description": "마지막 로그온 사용자 이름 표시 안 함 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 중"
+    },
+    {
+      "id": "W-11",
+      "name": "로컬 로그온 허용",
+      "description": "로컬 로그온 허용 정책 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 중"
+    },
+    {
+      "id": "W-12",
+      "name": "익명 SID/이름 변환 허용 해제",
+      "description": "익명 SID/이름 변환 허용 해제 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 중"
+    },
+    {
+      "id": "W-13",
+      "name": "콘솔 로그온 시 로컬 계정에서 빈 암호 사용 제한",
+      "description": "콘솔 로그온 시 빈 암호 사용 제한 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 중"
+    },
+    {
+      "id": "W-14",
+      "name": "원격터미널 접속 가능한 사용자 그룹 제한",
+      "description": "원격 터미널 접속 가능 사용자 그룹 제한 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 계정관리 / 중요도: 중"
+    },
+    {
+      "id": "W-15",
+      "name": "사용자 개인키 사용 시 암호 입력",
+      "description": "사용자 개인키 사용 시 암호 입력 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상 / 신규 항목"
+    },
+    {
+      "id": "W-16",
+      "name": "공유 권한 및 사용자 그룹 설정",
+      "description": "공유 디렉터리의 권한 및 사용자 그룹 적절한 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-17",
+      "name": "하드디스크 기본 공유 제거",
+      "description": "하드디스크 기본 공유(C$, D$ 등) 제거 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-18",
+      "name": "불필요한 서비스 제거",
+      "description": "불필요한 서비스 구동 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-19",
+      "name": "불필요한 IIS 서비스 구동 점검",
+      "description": "불필요한 IIS 서비스 구동 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-20",
+      "name": "NetBIOS 바인딩 서비스 구동 점검",
+      "description": "NetBIOS 바인딩 서비스 구동 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-21",
+      "name": "암호화되지 않는 FTP 서비스 비활성화",
+      "description": "암호화되지 않는 FTP 서비스 비활성화 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-22",
+      "name": "FTP 디렉토리 접근권한 설정",
+      "description": "FTP 디렉토리 접근권한 적절한 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-23",
+      "name": "공유 서비스에 대한 익명 접근 제한 설정",
+      "description": "공유 서비스 익명 접근 제한 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-24",
+      "name": "FTP 접근 제어 설정",
+      "description": "FTP 접근 제어 적절한 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-25",
+      "name": "DNS Zone Transfer 설정",
+      "description": "DNS Zone Transfer 적절한 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-26",
+      "name": "RDS(Remote Data Services) 제거",
+      "description": "RDS 제거 또는 비활성화 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-27",
+      "name": "최신 Windows OS Build 버전 적용",
+      "description": "최신 Windows OS Build 버전 적용 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 상"
+    },
+    {
+      "id": "W-28",
+      "name": "터미널 서비스 암호화 수준 설정",
+      "description": "터미널 서비스 암호화 수준 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 중"
+    },
+    {
+      "id": "W-29",
+      "name": "불필요한 SNMP 서비스 구동 점검",
+      "description": "불필요한 SNMP 서비스 구동 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 중"
+    },
+    {
+      "id": "W-30",
+      "name": "SNMP Community String 복잡성 설정",
+      "description": "SNMP Community String 복잡성 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 중"
+    },
+    {
+      "id": "W-31",
+      "name": "SNMP Access control 설정",
+      "description": "SNMP Access control 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 중"
+    },
+    {
+      "id": "W-32",
+      "name": "DNS 서비스 구동 점검",
+      "description": "DNS 서비스 구동 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 중"
+    },
+    {
+      "id": "W-33",
+      "name": "HTTP/FTP/SMTP 배너 차단",
+      "description": "HTTP/FTP/SMTP 배너 정보 차단 여부 점검",
+      "priority": "low",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 하"
+    },
+    {
+      "id": "W-34",
+      "name": "Telnet 서비스 비활성화",
+      "description": "Telnet 서비스 비활성화 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 중"
+    },
+    {
+      "id": "W-35",
+      "name": "불필요한 ODBC/OLE-DB 데이터 소스와 드라이브 제거",
+      "description": "불필요한 ODBC/OLE-DB 데이터 소스 및 드라이브 제거 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 중"
+    },
+    {
+      "id": "W-36",
+      "name": "원격터미널 접속 타임아웃 설정",
+      "description": "원격 터미널 접속 타임아웃 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 중"
+    },
+    {
+      "id": "W-37",
+      "name": "예약된 작업에 의심스러운 명령이 등록되어 있는지 점검",
+      "description": "예약된 작업(스케줄러)에 의심스러운 명령 등록 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 서비스관리 / 중요도: 중"
+    },
+    {
+      "id": "W-38",
+      "name": "주기적 보안 패치 및 벤더 권고사항 적용",
+      "description": "주기적 보안 패치 및 벤더 권고사항 적용 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 패치관리 / 중요도: 상"
+    },
+    {
+      "id": "W-39",
+      "name": "백신 프로그램 업데이트",
+      "description": "백신 프로그램 최신 업데이트 적용 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 패치관리 / 중요도: 상"
+    },
+    {
+      "id": "W-40",
+      "name": "정책에 따른 시스템 로깅 설정",
+      "description": "정책에 따른 시스템 로깅 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 로그관리 / 중요도: 중"
+    },
+    {
+      "id": "W-41",
+      "name": "NTP 및 시각 동기화 설정",
+      "description": "NTP 및 시각 동기화 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 로그관리 / 중요도: 중 / 신규 항목"
+    },
+    {
+      "id": "W-42",
+      "name": "이벤트 로그 관리 설정",
+      "description": "이벤트 로그 관리 적절한 설정 여부 점검",
+      "priority": "low",
+      "passes": false,
+      "notes": "2026 로그관리 / 중요도: 하"
+    },
+    {
+      "id": "W-43",
+      "name": "이벤트 로그 파일 접근 통제 설정",
+      "description": "이벤트 로그 파일 접근 통제 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 로그관리 / 중요도: 중 / 신규 항목"
+    },
+    {
+      "id": "W-44",
+      "name": "원격으로 액세스할 수 있는 레지스트리 경로",
+      "description": "원격 액세스 가능 레지스트리 경로 제한 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 상"
+    },
+    {
+      "id": "W-45",
+      "name": "백신 프로그램 설치",
+      "description": "백신 프로그램 설치 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 상"
+    },
+    {
+      "id": "W-46",
+      "name": "SAM 파일 접근 통제 설정",
+      "description": "SAM 파일 접근 통제 적절한 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 상"
+    },
+    {
+      "id": "W-47",
+      "name": "화면보호기 설정",
+      "description": "화면보호기 적절한 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 상"
+    },
+    {
+      "id": "W-48",
+      "name": "로그온하지 않고 시스템 종료 허용",
+      "description": "로그온하지 않고 시스템 종료 허용 해제 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 상"
+    },
+    {
+      "id": "W-49",
+      "name": "원격 시스템에서 강제로 시스템 종료",
+      "description": "원격 시스템에서 강제 시스템 종료 권한 적절한 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 상"
+    },
+    {
+      "id": "W-50",
+      "name": "보안 감사를 로그할 수 없는 경우 즉시 시스템 종료",
+      "description": "보안 감사 로그 불가 시 즉시 시스템 종료 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 상"
+    },
+    {
+      "id": "W-51",
+      "name": "SAM 계정과 공유의 익명 열거 허용 안 함",
+      "description": "SAM 계정과 공유의 익명 열거 허용 안 함 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 상"
+    },
+    {
+      "id": "W-52",
+      "name": "Autologon 기능 제어",
+      "description": "Autologon 기능 비활성화 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 상"
+    },
+    {
+      "id": "W-53",
+      "name": "이동식 미디어 포맷 및 꺼내기 허용",
+      "description": "이동식 미디어 포맷 및 꺼내기 허용 적절한 설정 여부 점검",
+      "priority": "high",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 상"
+    },
+    {
+      "id": "W-54",
+      "name": "DoS 공격 방어 레지스트리 설정",
+      "description": "DoS 공격 방어 레지스트리 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 중"
+    },
+    {
+      "id": "W-55",
+      "name": "사용자가 프린터 드라이버를 설치할 수 없게 함",
+      "description": "사용자 프린터 드라이버 설치 제한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 중"
+    },
+    {
+      "id": "W-56",
+      "name": "SMB 세션 중단 관리 설정",
+      "description": "SMB 세션 중단 관리 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 중 / 신규 항목"
+    },
+    {
+      "id": "W-57",
+      "name": "로그온 시 경고 메시지 설정",
+      "description": "로그온 시 경고 메시지 적절한 설정 여부 점검",
+      "priority": "low",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 하"
+    },
+    {
+      "id": "W-58",
+      "name": "사용자별 홈 디렉터리 권한 설정",
+      "description": "사용자별 홈 디렉터리 권한 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 중"
+    },
+    {
+      "id": "W-59",
+      "name": "LAN Manager 인증 수준",
+      "description": "LAN Manager 인증 수준 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 중"
+    },
+    {
+      "id": "W-60",
+      "name": "보안 채널 데이터 디지털 암호화 또는 서명",
+      "description": "보안 채널 데이터 디지털 암호화 또는 서명 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 중"
+    },
+    {
+      "id": "W-61",
+      "name": "파일 및 디렉터리 보호",
+      "description": "파일 및 디렉터리 보호(NTFS 파일시스템) 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 중"
+    },
+    {
+      "id": "W-62",
+      "name": "시작프로그램 목록 분석",
+      "description": "시작프로그램 목록에 불필요하거나 의심스러운 항목 존재 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 중"
+    },
+    {
+      "id": "W-63",
+      "name": "도메인 컨트롤러-사용자의 시간 동기화",
+      "description": "도메인 컨트롤러와 사용자 간 시간 동기화 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 중 / 신규 항목"
+    },
+    {
+      "id": "W-64",
+      "name": "윈도우 방화벽 설정",
+      "description": "윈도우 방화벽 적절한 설정 여부 점검",
+      "priority": "medium",
+      "passes": false,
+      "notes": "2026 보안관리 / 중요도: 중 / 신규 항목"
+    }
+  ]
+}
