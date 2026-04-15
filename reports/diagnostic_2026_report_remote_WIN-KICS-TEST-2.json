@@ -1,0 +1,1573 @@
+[
+    {
+        "Category":  "?? ??",
+        "Details":  "The default administrator account name has not been changed.",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-01",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "The Guest account is disabled.",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-02",
+        "Result":  "Good"
+    },
+    {
+        "Details":  "Review the list of user accounts to identify any unnecessary accounts.",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-03",
+        "Result":  "Manual Check Required",
+        "Category":  "?? ??",
+        "UserAccounts":  [
+                             {
+                                 "PasswordLastSet":  "03/13/2026 18:25:31",
+                                 "Description":  "Built-in account for administering the computer/domain",
+                                 "Name":  "Administrator",
+                                 "SID":  "S-1-5-21-4013193192-275375109-4264059536-500",
+                                 "Enabled":  false
+                             },
+                             {
+                                 "PasswordLastSet":  "",
+                                 "Description":  "A user account managed by the system.",
+                                 "Name":  "DefaultAccount",
+                                 "SID":  "S-1-5-21-4013193192-275375109-4264059536-503",
+                                 "Enabled":  false
+                             },
+                             {
+                                 "PasswordLastSet":  "",
+                                 "Description":  "Built-in account for guest access to the computer/domain",
+                                 "Name":  "Guest",
+                                 "SID":  "S-1-5-21-4013193192-275375109-4264059536-501",
+                                 "Enabled":  false
+                             },
+                             {
+                                 "PasswordLastSet":  "04/15/2026 21:30:54",
+                                 "Description":  "",
+                                 "Name":  "kicstest",
+                                 "SID":  "S-1-5-21-4013193192-275375109-4264059536-1000",
+                                 "Enabled":  true
+                             },
+                             {
+                                 "PasswordLastSet":  "03/14/2026 00:42:49",
+                                 "Description":  "A user account managed and used by the system for Windows Defender Application Guard scenarios.",
+                                 "Name":  "WDAGUtilityAccount",
+                                 "SID":  "S-1-5-21-4013193192-275375109-4264059536-504",
+                                 "Enabled":  false
+                             }
+                         ]
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "The account lockout threshold is not set (Current value: 0).",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-04",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Storing passwords using reversible encryption is disabled (Value: 0).",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-05",
+        "Result":  "Good"
+    },
+    {
+        "GroupMembers":  [
+                             {
+                                 "ObjectClass":  "User",
+                                 "SID":  "S-1-5-21-4013193192-275375109-4264059536-500",
+                                 "PrincipalSource":  "Local",
+                                 "Name":  "WIN-KICS-TEST-2\\Administrator"
+                             },
+                             {
+                                 "ObjectClass":  "User",
+                                 "SID":  "S-1-5-21-4013193192-275375109-4264059536-1000",
+                                 "PrincipalSource":  "Local",
+                                 "Name":  "WIN-KICS-TEST-2\\kicstest"
+                             }
+                         ],
+        "Details":  "Review the members of the \u0027Administrators\u0027 group.",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-06",
+        "Result":  "Manual Check Required",
+        "Category":  "?? ??"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Everyone permissions do not include anonymous users (EveryoneIncludesAnonymous: 0).",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-07",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Account lockout duration (0 min) or reset counter (0 min) below recommended 60 minutes.",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-08",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Details":  "Password policy issues found: Minimum password age is 0 days (Required: \u003e= 1); Password history size is 0 (Required: \u003e= 4)",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-09",
+        "Result":  "Vulnerable",
+        "Category":  "?? ??",
+        "PolicyDetails":  {
+                              "MaximumPasswordAge":  null,
+                              "MinimumPasswordLength":  8,
+                              "PasswordComplexity":  1,
+                              "PasswordHistorySize":  0,
+                              "MinimumPasswordAge":  0
+                          }
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "The \u0027Do not display last user name\u0027 policy is disabled (Current value: 0).",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-10",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Details":  "Non-administrator accounts are allowed to log on locally. Assigned: BUILTIN\\Administrators, BUILTIN\\Users, BUILTIN\\Backup Operators.",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "AssignedUsers":  [
+                              "BUILTIN\\Administrators",
+                              "BUILTIN\\Users",
+                              "BUILTIN\\Backup Operators"
+                          ],
+        "CheckItem":  "W-11",
+        "Result":  "Vulnerable",
+        "Category":  "?? ??"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "The \u0027Allow anonymous SID/name translation\u0027 policy is disabled.",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-12",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Blank password use is limited to console logon only (LimitBlankPasswordUse: 1).",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-13",
+        "Result":  "Good"
+    },
+    {
+        "GroupMembers":  [
+
+                         ],
+        "Details":  "The \u0027Remote Desktop Users\u0027 group is empty.",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-14",
+        "Result":  "Good",
+        "Category":  "?? ??"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "ForceKeyProtection is not configured. Users may store private keys without password protection.",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-15",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "No non-administrative shares found.",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-16",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "AutoShare registry not disabled (Server: , Wks: ); Default shares exist: C$",
+        "Timestamp":  "2026-04-15 21:48:29",
+        "CheckItem":  "W-17",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Timestamp":  "2026-04-15 21:48:30",
+        "CheckItem":  "W-18",
+        "RunningUnnecessaryServices":  [
+                                           "bowser (Browser)"
+                                       ],
+        "Result":  "Vulnerable",
+        "Details":  "Unnecessary services running: bowser (Browser)",
+        "Category":  "??? ??",
+        "ManualReviewServices":  [
+                                     "wuauserv (Windows Update)",
+                                     "CryptSvc (Cryptographic Services)",
+                                     "Dhcp (DHCP Client)",
+                                     "TrkWks (Distributed Link Tracking Client)",
+                                     "Dnscache (DNS Client)",
+                                     "Spooler (Print Spooler)"
+                                 ]
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "IIS Web Service (W3SVC) is not installed.",
+        "Timestamp":  "2026-04-15 21:48:30",
+        "CheckItem":  "W-19",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "NetBIOS over TCP/IP is not disabled on: Google VirtIO Ethernet Adapter: NetBIOS=Use DHCP setting",
+        "Timestamp":  "2026-04-15 21:48:30",
+        "CheckItem":  "W-20",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "FTP service is not running and port 21 is not listening.",
+        "Timestamp":  "2026-04-15 21:48:30",
+        "CheckItem":  "W-21",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "FTP service is not running.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-22",
+        "Result":  "Not Applicable"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "FTP service is not running.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-23",
+        "Result":  "Not Applicable"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "FTP service is not running.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-24",
+        "Result":  "Not Applicable"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "DNS service is not running.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-25",
+        "Result":  "Not Applicable"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "OS version 10.0 does not include RDS by default.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-26",
+        "Result":  "Not Applicable"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "OS: Microsoft Windows Server 2022 Datacenter, Version: 10.0.20348, Build: 20348, SP: 0. Verify that this is the latest available build.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-27",
+        "Result":  "Manual Check Required"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "Terminal service encryption level is 3 (Recommended: \u003e= 2).",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-28",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "SNMP service is not installed.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-29",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "SNMP service is not installed.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-30",
+        "Result":  "Not Applicable"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "SNMP service is not installed.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-31",
+        "Result":  "Not Applicable"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "DNS service is not running.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-32",
+        "Result":  "Not Applicable"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "No HTTP/FTP/SMTP services are running.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-33",
+        "Result":  "Not Applicable"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "Telnet service is not installed.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-34",
+        "Result":  "Good"
+    },
+    {
+        "Timestamp":  "2026-04-15 21:48:31",
+        "Details":  "No System DSNs found.",
+        "SystemDSNs":  [
+
+                       ],
+        "CheckItem":  "W-35",
+        "Result":  "Good",
+        "Category":  "??? ??"
+    },
+    {
+        "Category":  "??? ??",
+        "Details":  "Remote terminal idle timeout is not set or unlimited (Value: 0).",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-36",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Details":  "Found 113 active scheduled task(s). Review for suspicious commands.",
+        "Timestamp":  "2026-04-15 21:48:31",
+        "CheckItem":  "W-37",
+        "Result":  "Manual Check Required",
+        "ScheduledTasks":  [
+                               {
+                                   "Author":  null,
+                                   "Actions":  "\"C:\\Program Files\\Google\\Compute Engine\\metadata_scripts\\run_startup_scripts.cmd\" ",
+                                   "LastRunTime":  "04/15/2026 21:29:29",
+                                   "TaskPath":  "\\",
+                                   "TaskName":  "GCEStartup",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "C:\\Program Files (x86)\\Microsoft\\EdgeUpdate\\MicrosoftEdgeUpdate.exe /c",
+                                   "LastRunTime":  "03/13/2026 18:25:25",
+                                   "TaskPath":  "\\",
+                                   "TaskName":  "MicrosoftEdgeUpdateTaskMachineCore",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267014
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "C:\\Program Files (x86)\\Microsoft\\EdgeUpdate\\MicrosoftEdgeUpdate.exe /ua /installsource scheduler",
+                                   "LastRunTime":  "04/15/2026 21:36:36",
+                                   "TaskPath":  "\\",
+                                   "TaskName":  "MicrosoftEdgeUpdateTaskMachineUA",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\.NET Framework\\",
+                                   "TaskName":  ".NET Framework NGEN v4.0.30319",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\.NET Framework\\",
+                                   "TaskName":  ".NET Framework NGEN v4.0.30319 64",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Active Directory Rights Management Services Client\\",
+                                   "TaskName":  "AD RMS Rights Policy Template Management (Manual)",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\AppID\\",
+                                   "TaskName":  "EDP Policy Manager",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\compattelrunner.exe ",
+                                   "LastRunTime":  "04/15/2026 21:29:29",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Application Experience\\",
+                                   "TaskName":  "Microsoft Compatibility Appraiser",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\rundll32.exe %windir%\\system32\\PcaSvc.dll,PcaPatchSdbTask",
+                                   "LastRunTime":  "04/15/2026 21:34:34",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Application Experience\\",
+                                   "TaskName":  "PcaPatchDbTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\compattelrunner.exe -maintenance",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Application Experience\\",
+                                   "TaskName":  "ProgramDataUpdater",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\rundll32.exe Startupscan.dll,SusRunTask",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Application Experience\\",
+                                   "TaskName":  "StartupAppTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\AppHostRegistrationVerifier.exe ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\ApplicationData\\",
+                                   "TaskName":  "appuriverifierdaily",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\AppHostRegistrationVerifier.exe ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\ApplicationData\\",
+                                   "TaskName":  "appuriverifierinstall",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\rundll32.exe Windows.Storage.ApplicationData.dll,CleanupTemporaryState",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\ApplicationData\\",
+                                   "TaskName":  "CleanupTemporaryState",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\dstokenclean.exe ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\ApplicationData\\",
+                                   "TaskName":  "DsSvcCleanup",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\rundll32.exe /d acproxy.dll,PerformAutochkOperations",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Autochk\\",
+                                   "TaskName":  "Proxy",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\BitLocker\\",
+                                   "TaskName":  "BitLocker Encrypt All Drives",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\BitLocker\\",
+                                   "TaskName":  "BitLocker MDM policy Refresh",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\BrokerInfrastructure\\",
+                                   "TaskName":  "BgTaskRegistrationMaintenanceTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  268435456
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:28:28",
+                                   "TaskPath":  "\\Microsoft\\Windows\\CertificateServicesClient\\",
+                                   "TaskName":  "AikCertEnrollTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  2148073494
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\CertificateServicesClient\\",
+                                   "TaskName":  "CryptoPolicyTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:29:29",
+                                   "TaskPath":  "\\Microsoft\\Windows\\CertificateServicesClient\\",
+                                   "TaskName":  "KeyPreGenTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:29:29",
+                                   "TaskPath":  "\\Microsoft\\Windows\\CertificateServicesClient\\",
+                                   "TaskName":  "SystemTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "03/14/2026 01:22:22",
+                                   "TaskPath":  "\\Microsoft\\Windows\\CertificateServicesClient\\",
+                                   "TaskName":  "UserTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\CertificateServicesClient\\",
+                                   "TaskName":  "UserTask-Roam",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Chkdsk\\",
+                                   "TaskName":  "ProactiveScan",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%windir%\\system32\\bcdboot.exe %windir% /sysrepair",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Chkdsk\\",
+                                   "TaskName":  "SyspartRepair",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\CloudExperienceHost\\",
+                                   "TaskName":  "CreateObjectTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%SystemRoot%\\System32\\wsqmcons.exe ",
+                                   "LastRunTime":  "04/15/2026 21:34:34",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Customer Experience Improvement Program\\",
+                                   "TaskName":  "Consolidator",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Customer Experience Improvement Program\\",
+                                   "TaskName":  "UsbCeip",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:34:34",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Data Integrity Scan\\",
+                                   "TaskName":  "Data Integrity Check And Scan",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Data Integrity Scan\\",
+                                   "TaskName":  "Data Integrity Scan",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Data Integrity Scan\\",
+                                   "TaskName":  "Data Integrity Scan for Crash Recovery",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\defrag.exe -c -h -k -g -$",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Defrag\\",
+                                   "TaskName":  "ScheduledDefrag",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%windir%\\system32\\devicecensus.exe SystemCxt",
+                                   "LastRunTime":  "04/15/2026 21:29:29",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Device Information\\",
+                                   "TaskName":  "Device",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%windir%\\system32\\devicecensus.exe UserCxt",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Device Information\\",
+                                   "TaskName":  "Device User",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Device Setup\\",
+                                   "TaskName":  "Metadata Refresh",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Diagnosis\\",
+                                   "TaskName":  "Scheduled",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%windir%\\system32\\directxdatabaseupdater.exe ",
+                                   "LastRunTime":  "03/13/2026 17:50:50",
+                                   "TaskPath":  "\\Microsoft\\Windows\\DirectX\\",
+                                   "TaskName":  "DirectXDatabaseUpdater",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%windir%\\system32\\dxgiadaptercache.exe ",
+                                   "LastRunTime":  "04/15/2026 21:30:30",
+                                   "TaskPath":  "\\Microsoft\\Windows\\DirectX\\",
+                                   "TaskName":  "DXGIAdapterCache",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\cleanmgr.exe /autocleanstoragesense /d %systemdrive%",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\DiskCleanup\\",
+                                   "TaskName":  "SilentCleanup",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\rundll32.exe dfdts.dll,DfdGetDefaultPolicyAndSMART",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\DiskDiagnostic\\",
+                                   "TaskName":  "Microsoft-Windows-DiskDiagnosticDataCollector",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%windir%\\system32\\disksnapshot.exe -z",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\DiskFootprint\\",
+                                   "TaskName":  "Diagnostics",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\DiskFootprint\\",
+                                   "TaskName":  "StorageSense",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  2147746132
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\EDP\\",
+                                   "TaskName":  "EDP App Launch Task",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\EDP\\",
+                                   "TaskName":  "EDP Auth Task",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\EDP\\",
+                                   "TaskName":  "EDP Inaccessible Credentials Task",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\EDP\\",
+                                   "TaskName":  "StorageCardEncryption Task",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:29:29",
+                                   "TaskPath":  "\\Microsoft\\Windows\\ExploitGuard\\",
+                                   "TaskName":  "ExploitGuard MDM policy Refresh",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:32:32",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Flighting\\FeatureConfig\\",
+                                   "TaskName":  "ReconcileFeatures",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Flighting\\FeatureConfig\\",
+                                   "TaskName":  "UsageDataFlushing",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:29:29",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Flighting\\FeatureConfig\\",
+                                   "TaskName":  "UsageDataReporting",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:33:33",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Flighting\\OneSettings\\",
+                                   "TaskName":  "RefreshCache",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "03/14/2026 00:47:47",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Input\\",
+                                   "TaskName":  "LocalUserSyncDataAvailable",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Input\\",
+                                   "TaskName":  "MouseSyncDataAvailable",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Input\\",
+                                   "TaskName":  "PenSyncDataAvailable",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Input\\",
+                                   "TaskName":  "TouchpadSyncDataAvailable",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "03/13/2026 18:20:20",
+                                   "TaskPath":  "\\Microsoft\\Windows\\International\\",
+                                   "TaskName":  "Synchronize Language Settings",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\LanguageComponentsInstaller\\",
+                                   "TaskName":  "Installation",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\License Manager\\",
+                                   "TaskName":  "TempSignedLicenseExchange",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%windir%\\System32\\LocationNotificationWindows.exe ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Location\\",
+                                   "TaskName":  "Notifications",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%windir%\\System32\\WindowsActionDialog.exe ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Location\\",
+                                   "TaskName":  "WindowsActionDialog",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Maintenance\\",
+                                   "TaskName":  "WinSAT",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\lpremove.exe ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\MUI\\",
+                                   "TaskName":  "LPRemove",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft",
+                                   "Actions":  "%windir%\\system32\\gatherNetworkInfo.vbs ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\NetTrace\\",
+                                   "TaskName":  "GatherNetworkInfo",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:34:34",
+                                   "TaskPath":  "\\Microsoft\\Windows\\PI\\",
+                                   "TaskName":  "Secure-Boot-Update",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\PI\\",
+                                   "TaskName":  "Sqm-Tasks",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "03/13/2026 17:47:47",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Plug and Play\\",
+                                   "TaskName":  "Device Install Group Policy",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  2147943515
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "03/14/2026 01:22:22",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Plug and Play\\",
+                                   "TaskName":  "Device Install Reboot Required",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%SystemRoot%\\System32\\drvinst.exe 6",
+                                   "LastRunTime":  "03/13/2026 18:53:53",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Plug and Play\\",
+                                   "TaskName":  "Sysprep Generalize Drivers",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:44:44",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Power Efficiency Diagnostics\\",
+                                   "TaskName":  "AnalyzeSystem",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Ras\\",
+                                   "TaskName":  "MobilityManager",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\RecoveryEnvironment\\",
+                                   "TaskName":  "VerifyWinRE",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Registry\\",
+                                   "TaskName":  "RegIdleBackup",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%systemroot%\\system32\\cscript.exe /B /nologo %systemroot%\\system32\\calluxxprovider.vbs $(Arg0) $(Arg1) $(Arg2)",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Server Manager\\",
+                                   "TaskName":  "CleanupOldPerfLogs",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\ServerManagerLauncher.exe ",
+                                   "LastRunTime":  "03/14/2026 01:22:22",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Server Manager\\",
+                                   "TaskName":  "ServerManager",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Servicing\\",
+                                   "TaskName":  "StartComponentCleanup",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "03/13/2026 17:53:53",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Shell\\",
+                                   "TaskName":  "CreateObjectTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Shell\\",
+                                   "TaskName":  "IndexerAutomaticMaintenance",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Shell\\",
+                                   "TaskName":  "UpdateUserPictureTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%systemroot%\\system32\\cmd.exe /d /c %systemroot%\\system32\\silcollector.cmd configure",
+                                   "LastRunTime":  "04/15/2026 21:30:30",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Software Inventory Logging\\",
+                                   "TaskName":  "Configuration",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\SoftwareProtectionPlatform\\",
+                                   "TaskName":  "SvcRestartTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\SpaceAgent.exe ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\SpacePort\\",
+                                   "TaskName":  "SpaceAgentTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "$(@%SystemRoot%\\system32\\spaceman.exe,-2)",
+                                   "Actions":  "%windir%\\system32\\spaceman.exe /Work",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\SpacePort\\",
+                                   "TaskName":  "SpaceManagerTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%windir%\\system32\\speech_onecore\\common\\SpeechModelDownload.exe ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Speech\\",
+                                   "TaskName":  "SpeechModelDownloadTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "$(@%SystemRoot%\\system32\\Windows.StateRepositoryClient.dll,-600)",
+                                   "Actions":  "%windir%\\system32\\rundll32.exe %windir%\\system32\\Windows.StateRepositoryClient.dll,StateRepositoryDoMaintenanceTasks",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\StateRepository\\",
+                                   "TaskName":  "MaintenanceTasks",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Storage Tiers Management\\",
+                                   "TaskName":  "Storage Tiers Management Initialization",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Task Manager\\",
+                                   "TaskName":  "Interactive",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "03/14/2026 01:22:22",
+                                   "TaskPath":  "\\Microsoft\\Windows\\TextServicesFramework\\",
+                                   "TaskName":  "MsCtfMonitor",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "03/14/2026 01:22:22",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Time Synchronization\\",
+                                   "TaskName":  "ForceSynchronizeTime",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\sc.exe start w32time task_started",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Time Synchronization\\",
+                                   "TaskName":  "SynchronizeTime",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  5
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\tzsync.exe ",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Time Zone\\",
+                                   "TaskName":  "SynchronizeTimeZone",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\TPM\\",
+                                   "TaskName":  "Tpm-HASCertRetr",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "04/15/2026 21:29:29",
+                                   "TaskPath":  "\\Microsoft\\Windows\\TPM\\",
+                                   "TaskName":  "Tpm-Maintenance",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%systemroot%\\system32\\usoclient.exe ReportPolicies",
+                                   "LastRunTime":  "04/15/2026 21:40:40",
+                                   "TaskPath":  "\\Microsoft\\Windows\\UpdateOrchestrator\\",
+                                   "TaskName":  "Report policies",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%systemroot%\\system32\\usoclient.exe StartScan",
+                                   "LastRunTime":  "04/15/2026 21:34:34",
+                                   "TaskPath":  "\\Microsoft\\Windows\\UpdateOrchestrator\\",
+                                   "TaskName":  "Schedule Scan",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%systemroot%\\system32\\usoclient.exe StartScan",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\UpdateOrchestrator\\",
+                                   "TaskName":  "Schedule Scan Static Task",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "%systemroot%\\system32\\usoclient.exe StartWork",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\UpdateOrchestrator\\",
+                                   "TaskName":  "Schedule Wake To Work",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%systemroot%\\system32\\MusNotification.exe ",
+                                   "LastRunTime":  "04/15/2026 21:34:34",
+                                   "TaskPath":  "\\Microsoft\\Windows\\UpdateOrchestrator\\",
+                                   "TaskName":  "USO_UxBroker",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "$(@%systemRoot%\\system32\\update\\uusbrain.dll,-101)",
+                                   "Actions":  "%systemroot%\\system32\\failover.exe ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\UpdateOrchestrator\\",
+                                   "TaskName":  "UUS Failover Task",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\WDI\\",
+                                   "TaskName":  "ResolutionHost",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.26030.3011-0\\MpCmdRun.exe -IdleTask -TaskName WdCacheMaintenance",
+                                   "LastRunTime":  "04/15/2026 21:45:45",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Windows Defender\\",
+                                   "TaskName":  "Windows Defender Cache Maintenance",
+                                   "State":  "Running",
+                                   "LastTaskResult":  267009
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.26030.3011-0\\MpCmdRun.exe -IdleTask -TaskName WdCleanup",
+                                   "LastRunTime":  "04/15/2026 21:45:45",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Windows Defender\\",
+                                   "TaskName":  "Windows Defender Cleanup",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.26030.3011-0\\MpCmdRun.exe Scan -ScheduleJob -ScanTrigger 55 -IdleScheduledJob",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Windows Defender\\",
+                                   "TaskName":  "Windows Defender Scheduled Scan",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.26030.3011-0\\MpCmdRun.exe -IdleTask -TaskName WdVerification",
+                                   "LastRunTime":  "04/15/2026 21:45:45",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Windows Defender\\",
+                                   "TaskName":  "Windows Defender Verification",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\wermgr.exe -upload",
+                                   "LastRunTime":  "04/15/2026 21:34:34",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Windows Error Reporting\\",
+                                   "TaskName":  "QueueReporting",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "%windir%\\system32\\rundll32.exe bfe.dll,BfeOnServiceStartTypeChange",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Windows Filtering Platform\\",
+                                   "TaskName":  "BfeOnServiceStartTypeChange",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  "\"%ProgramFiles%\\Windows Media Player\\wmpnscfg.exe\" ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Windows Media Sharing\\",
+                                   "TaskName":  "UpdateLibrary",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "03/14/2026 01:22:22",
+                                   "TaskPath":  "\\Microsoft\\Windows\\WindowsColorSystem\\",
+                                   "TaskName":  "Calibration Loader",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation.",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\WindowsUpdate\\",
+                                   "TaskName":  "Refresh Group Policy Cache",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft Corporation.",
+                                   "Actions":  "C:\\Windows\\system32\\sc.exe start wuauserv",
+                                   "LastRunTime":  "11/30/1999 00:00:00",
+                                   "TaskPath":  "\\Microsoft\\Windows\\WindowsUpdate\\",
+                                   "TaskName":  "Scheduled Start",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  267011
+                               },
+                               {
+                                   "Author":  "Microsoft",
+                                   "Actions":  " ",
+                                   "LastRunTime":  "03/14/2026 01:22:22",
+                                   "TaskPath":  "\\Microsoft\\Windows\\Wininet\\",
+                                   "TaskName":  "CacheTask",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  1073807364
+                               },
+                               {
+                                   "Author":  null,
+                                   "Actions":  " ",
+                                   "LastRunTime":  "03/14/2026 01:22:22",
+                                   "TaskPath":  "\\Microsoft\\Windows\\WwanSvc\\",
+                                   "TaskName":  "OobeDiscovery",
+                                   "State":  "Ready",
+                                   "LastTaskResult":  0
+                               }
+                           ],
+        "Category":  "??? ??"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Windows Update service status: Running. Verify that the latest security patches and vendor recommendations are applied.",
+        "Timestamp":  "2026-04-15 21:48:34",
+        "CheckItem":  "W-38",
+        "Result":  "Manual Check Required"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Windows Defender service is running. Verify that virus definitions are up to date.",
+        "Timestamp":  "2026-04-15 21:48:34",
+        "CheckItem":  "W-39",
+        "Result":  "Manual Check Required"
+    },
+    {
+        "Timestamp":  "2026-04-15 21:48:34",
+        "Details":  "Audit policies not meeting recommendations: Logon/Logoff: Current=\u0027System.Object[]\u0027, Recommended=\u0027Success and Failure\u0027; Account Management: Current=\u0027System.Object[]\u0027, Recommended=\u0027Success and Failure\u0027; Object Access: Current=\u0027System.Object[]\u0027, Recommended=\u0027Failure\u0027; Privilege Use: Current=\u0027System.Object[]\u0027, Recommended=\u0027Failure\u0027; Account Logon: Current=\u0027System.Object[]\u0027, Recommended=\u0027Success and Failure\u0027; Policy Change: Current=\u0027System.Object[]\u0027, Recommended=\u0027Success\u0027; System: Current=\u0027System.Object[]\u0027, Recommended=\u0027Success and Failure\u0027",
+        "NonCompliant":  [
+                             "Logon/Logoff: Current=\u0027System.Object[]\u0027, Recommended=\u0027Success and Failure\u0027",
+                             "Account Management: Current=\u0027System.Object[]\u0027, Recommended=\u0027Success and Failure\u0027",
+                             "Object Access: Current=\u0027System.Object[]\u0027, Recommended=\u0027Failure\u0027",
+                             "Privilege Use: Current=\u0027System.Object[]\u0027, Recommended=\u0027Failure\u0027",
+                             "Account Logon: Current=\u0027System.Object[]\u0027, Recommended=\u0027Success and Failure\u0027",
+                             "Policy Change: Current=\u0027System.Object[]\u0027, Recommended=\u0027Success\u0027",
+                             "System: Current=\u0027System.Object[]\u0027, Recommended=\u0027Success and Failure\u0027"
+                         ],
+        "CheckItem":  "W-40",
+        "Result":  "Vulnerable",
+        "Category":  "?? ??"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Windows Time service is running. NTP server: metadata.google.internal,0x1, Type: NTP.",
+        "Timestamp":  "2026-04-15 21:48:34",
+        "CheckItem":  "W-41",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Event log issues: Internet Explorer: Size=1028KB (Required: \u003e=10240KB); SMSApi: Size=1028KB (Required: \u003e=10240KB); Setup: Size=1028KB (Required: \u003e=10240KB); OpenSSH/Operational: Size=1028KB (Required: \u003e=10240KB); OpenSSH/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WPD-MTPClassDriver/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WPD-CompositeClassDriver/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WPD-ClassInstaller/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Workplace Join/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WMPNSS-Service/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WMI-Activity/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Wired-AutoConfig/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Winsock-WS2HELP/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WinRM/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Winlogon/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WinINet/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WinINet-Config/ProxyConfigChanged: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WinHttp/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WindowsUpdateClient/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WindowsSystemAssessmentTool/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Windows Firewall With Advanced Security/FirewallDiagnostics: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Windows Firewall With Advanced Security/Firewall: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Windows Firewall With Advanced Security/ConnectionSecurity: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Windows Defender/WHC: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Win32k/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WFP/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WER-PayloadHealth/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-WebAuthN/Operational: Size=5120KB (Required: \u003e=10240KB); Microsoft-Windows-Wcmsvc/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-VPN/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-VPN-Client/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-VolumeSnapshot-Driver/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-VHDMP-Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-VerifyHardwareSecurity/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-VDRVROOT/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-UserPnp/DeviceInstall: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-UserPnp/ActionCenter: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-User-Loader/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-User Profile Service/Operational: Size=4096KB (Required: \u003e=10240KB); Microsoft-Windows-User Device Registration/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-User Control Panel/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-UniversalTelemetryClient/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-UAC/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-UAC-FileVirtualization/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TZUtil/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TZSync/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TWinUI/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Time-Service/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Time-Service-PTP-Provider/PTP-Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-SessionBroker-Client/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-SessionBroker-Client/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-ServerUSBDevices/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-ServerUSBDevices/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-RemoteConnectionManager/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-RDPClient/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-Printers/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-Printers/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-PnPDevices/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-PnPDevices/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-LocalSessionManager/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-LocalSessionManager/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-ClientUSBDevices/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TerminalServices-ClientUSBDevices/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TCPIP/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-TaskScheduler/Maintenance: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SystemSettingsThreshold/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-StorageSpaces-SpaceManager/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-StorageSpaces-Parser/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-StorageSpaces-ManagementAgent/WHC: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-StorageSpaces-Driver/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-StorageSpaces-Api/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-StorageManagement-PartUtil/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Storage-Tiering/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Storage-Storport/Health: Size=6144KB (Required: \u003e=10240KB); Microsoft-Windows-Storage-ClassPnP/Operational: Size=6144KB (Required: \u003e=10240KB); Microsoft-Windows-StateRepository/Restricted: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-StateRepository/Operational: Size=5120KB (Required: \u003e=10240KB); Microsoft-Windows-SMBWitnessClient/Informational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SMBWitnessClient/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SMBServer/Security: Size=8192KB (Required: \u003e=10240KB); Microsoft-Windows-SMBServer/Operational: Size=8192KB (Required: \u003e=10240KB); Microsoft-Windows-SMBServer/Connectivity: Size=8192KB (Required: \u003e=10240KB); Microsoft-Windows-SMBServer/Audit: Size=8192KB (Required: \u003e=10240KB); Microsoft-Windows-SMBDirect/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SmbClient/Security: Size=8192KB (Required: \u003e=10240KB); Microsoft-Windows-SMBClient/Operational: Size=8192KB (Required: \u003e=10240KB); Microsoft-Windows-SmbClient/Connectivity: Size=8192KB (Required: \u003e=10240KB); Microsoft-Windows-SmbClient/Audit: Size=8192KB (Required: \u003e=10240KB); Microsoft-Windows-SmartCard-TPM-VCard-Module/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SmartCard-TPM-VCard-Module/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SmartCard-DeviceEnum/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SmartCard-Audit/Authentication: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SilProvider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-ShellCommon-StartLayoutPopulation/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Shell-Core/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Shell-Core/LogonTasksChannel: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Shell-Core/AppDefaults: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Shell-Core/ActionCenter: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Shell-ConnectedAccountState/ActionCenter: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-ServerManager-MultiMachine/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-ServerManager-MultiMachine/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-ServerManager-MgmtProvider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-ServerManager-DeploymentProvider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-ServerManager-ConfigureSMRemoting/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SenseIR/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SENSE/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SecurityMitigationsBroker/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Security-UserConsentVerifier/Audit: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Security-SPP-UX-Notifications/ActionCenter: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Security-SPP-UX-GenuineCenter-Logging/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Security-Netlogon/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Security-Mitigations/UserMode: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Security-Mitigations/KernelMode: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Security-LessPrivilegedAppContainer/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Security-EnterpriseData-FileRevocationManager/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Security-Audit-Configuration-Client/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Security-Adminless/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-SearchUI/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-RestartManager/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Resource-Exhaustion-Resolver/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Resource-Exhaustion-Detector/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-RemoteDesktopServices-SessionServices/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-RemoteDesktopServices-RdpCoreTS/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-RemoteDesktopServices-RdpCoreTS/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-RemoteApp and Desktop Connections/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-RemoteApp and Desktop Connections/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Regsvr32/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-ReadyBoost/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-PushNotification-Platform/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-PushNotification-Platform/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Program-Compatibility-Assistant/CompatAfterUpgrade: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Privacy-Auditing/Operational: Mode=Retain (Required: Circular); Microsoft-Windows-PrintService/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-PrintBRM/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-PowerShell/Admin: Mode=Retain (Required: Circular); Microsoft-Windows-PowerShell-DesiredStateConfiguration-FileDownloadManager/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Policy/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-PersistentMemory-ScmBus/Operational: Size=6144KB (Required: \u003e=10240KB); Microsoft-Windows-PersistentMemory-ScmBus/Certification: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-PersistentMemory-PmemDisk/Operational: Size=6144KB (Required: \u003e=10240KB); Microsoft-Windows-PersistentMemory-Nvdimm/Operational: Size=6144KB (Required: \u003e=10240KB); Microsoft-Windows-PerceptionSensorDataService/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-PerceptionRuntime/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-OOBE-Machine-DUI/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-OfflineFiles/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-NTLM/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Ntfs/WHC: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-NlaSvc/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-NetworkProvider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-NetworkProfile/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-NetworkLocationWizard/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-NdisImPlatform/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-NCSI/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-MUI/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-MUI/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-MsLbfoProvider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Mprddm/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-MiStreamProvider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-MemoryDiagnostics-Results/Debug: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-ManagementTools-TaskManagerProvider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-ManagementTools-RegistryProvider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-LiveId/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-LanguagePackSetup/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Known Folders API Service: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-WDI/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-StoreMgr/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-ShimEngine/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-Power/Thermal-Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-PnP/Driver Watchdog: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-PnP/Device Management: Size=5120KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-PnP/Configuration: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-LiveDump/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-IO/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-EventTracing/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-Dump/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-CPU-Starvation/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-Cache/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-Boot/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Kernel-ApphelpCache/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-KdsSvc/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Iphlpsvc/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-International-RegionalOptionsControlPanel/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-IKE/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-IdCtrls/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Hyper-V-Hypervisor-Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Hyper-V-Hypervisor-Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Hyper-V-Guest-Drivers/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-HomeGroup Control Panel/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Help/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-HelloForBusiness/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-GroupPolicy/Operational: Size=4096KB (Required: \u003e=10240KB); Microsoft-Windows-GenericRoaming/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Forwarding/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Folder Redirection/Operational: Size=4096KB (Required: \u003e=10240KB); Microsoft-Windows-FMS/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-FileShareShadowCopyProvider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-FileServices-ServerManager-EventProvider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-FileServices-ServerManager-EventProvider/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-FederationServices-Deployment/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-FeatureConfiguration/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Fault-Tolerant-Heap/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EventCollector/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EnrollmentWebService/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EnrollmentPolicyWebService/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EnhancedStorage-EhStorClass/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EDP-Audit-TCB/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EDP-Audit-Regular/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EDP-Application-Learning/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EapMethods-Ttls/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EapMethods-Sim/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EapMethods-RasTls/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EapMethods-RasChap/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-EapHost/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DxgKrnl-Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DxgKrnl-Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DSC/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DSC/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DiskDiagnosticResolver/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DiskDiagnosticDataCollector/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DiskDiagnostic/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DirectoryServices-Deployment/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Diagnostics-Networking/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Diagnosis-ScriptedDiagnosticsProvider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Diagnosis-Scripted/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Diagnosis-Scripted/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Diagnosis-Scheduled/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Diagnosis-PLA/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Diagnosis-PCW/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Diagnosis-DPS/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Dhcpv6-Client/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Dhcp-Client/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DeviceUpdateAgent/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DeviceSync/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DeviceSetupManager/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DeviceSetupManager/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Devices-Background/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Autopilot: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DeviceGuard/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DateTimeControlPanel/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DataIntegrityScan/CrashRecovery: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DataIntegrityScan/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-DAL-Provider/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Crypto-NCrypt/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Crypto-NCrypt/KeyMgmt: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Crypto-NCrypt/CertInUse: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Crypto-DPAPI/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Crypto-DPAPI/BackUpKeySvc: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-CorruptedFileRecovery-Server/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-CorruptedFileRecovery-Client/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-CoreApplication/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Containers-Wcifs/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Containers-BindFlt/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Compat-Appraiser/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-CodeIntegrity/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-CloudStore/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Cleanmgr/Diagnostic: Size=8192KB (Required: \u003e=10240KB); Microsoft-Windows-CertificateServicesClient-Lifecycle-User/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-CertificateServicesClient-Lifecycle-System/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-CertificateServices-Deployment/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-BranchCacheSMB/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Bluetooth-MTPEnum/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Bluetooth-BthLEPrepairing/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Bits-Client/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Biometrics/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-BestPractices/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Backup: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-BackgroundTaskInfrastructure/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Authentication User Interface/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Audio/PlaybackManager: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Audio/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Audio/CaptureMonitor: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AppxPackaging/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AppXDeploymentServer/Restricted: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AppXDeploymentServer/Operational: Size=5120KB (Required: \u003e=10240KB); Microsoft-Windows-AppXDeployment/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AppReadiness/Operational: Size=5120KB (Required: \u003e=10240KB); Microsoft-Windows-AppReadiness/Admin: Size=5120KB (Required: \u003e=10240KB); Microsoft-Windows-AppModel-Runtime/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AppLocker/Packaged app-Execution: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AppLocker/Packaged app-Deployment: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AppLocker/MSI and Script: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AppLocker/EXE and DLL: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Application-Experience/Steps-Recorder: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Application-Experience/Program-Telemetry: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Application-Experience/Program-Inventory: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Application-Experience/Program-Compatibility-Troubleshooter: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Application-Experience/Program-Compatibility-Assistant: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Application Server-Applications/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-Application Server-Applications/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-ApplicabilityEngine/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AppID/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AppHost/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AllJoyn/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-All-User-Install-Agent/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Windows-AAD/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-User Experience Virtualization-SQM Uploader/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-User Experience Virtualization-IPC/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-User Experience Virtualization-App Agent/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-User Experience Virtualization-Agent Driver/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-System-Diagnostics-DiagnosticInvoker/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-ServerCore-ShellLauncher/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Rdms-UI/Operational: Size=1028KB (Required: \u003e=10240KB); Microsoft-Rdms-UI/Admin: Size=1028KB (Required: \u003e=10240KB); Microsoft-Client-Licensing-Platform/Admin: Size=1028KB (Required: \u003e=10240KB); GCE-VSS-Provider/Operational: Size=1028KB (Required: \u003e=10240KB); GCE-VSS-Agent/Operational: Size=1028KB (Required: \u003e=10240KB)",
+        "Timestamp":  "2026-04-15 21:48:34",
+        "CheckItem":  "W-42",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Event log files have proper access control settings.",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-43",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Remote Registry service is installed but not running (Status: Stopped).",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-44",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Windows Defender service is running.",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-45",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "SAM file access control is properly configured.",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-46",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Screensaver issues: ScreenSaveTimeOut= (Required: \u003c= 600 sec); ScreenSaverIsSecure= (Required: 1)",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-47",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Shutdown without logon is disabled (ShutdownWithoutLogon: 0).",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-48",
+        "Result":  "Good"
+    },
+    {
+        "Details":  "Only Administrators can force remote shutdown. Assigned: BUILTIN\\Administrators.",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "AssignedUsers":  [
+                              "BUILTIN\\Administrators"
+                          ],
+        "CheckItem":  "W-49",
+        "Result":  "Good",
+        "Category":  "?? ??"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "CrashOnAuditFail is disabled (Value: 0). System will not shut down on audit failure.",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-50",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Anonymous SAM enumeration not fully restricted: RestrictAnonymous=0 (Required: 1)",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-51",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Autologon is disabled (AutoAdminLogon: Not Set).",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-52",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Removable media format/eject is not restricted to Administrators (allocateDASD: Not Set).",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-53",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "DoS defense registry issues: SynAttackProtect=Not Set (must be 1 or 2); EnableDeadGWDetect=Not Set (must be 0); NoNameReleaseOnDemand=Not Set (must be 1)",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-54",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Users are prevented from installing printer drivers (AddPrinterDrivers: 1).",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-55",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "SMB AutoDisconnect is set to 15 minutes (Recommended: \u003c= 15 min).",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-56",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Logon warning message issues: LegalNoticeCaption is not configured",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-57",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "No user home directories grant access to \u0027Everyone\u0027.",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-58",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "LAN Manager authentication level is Not Set (Required: \u003e= 3 for NTLMv2).",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-59",
+        "Result":  "Vulnerable"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Secure channel data encryption and signing are properly configured.",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-60",
+        "Result":  "Good"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "All fixed drives use NTFS file system.",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-61",
+        "Result":  "Good"
+    },
+    {
+        "Details":  "Found 2 startup item(s). Review for suspicious entries.",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-62",
+        "Result":  "Manual Check Required",
+        "StartupItems":  [
+                             {
+                                 "Name":  "SecurityHealth",
+                                 "Source":  "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                                 "Value":  "C:\\Windows\\system32\\SecurityHealthSystray.exe"
+                             },
+                             {
+                                 "Name":  "AzureArcSetup",
+                                 "Source":  "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                                 "Value":  "C:\\Windows\\AzureArcSetup\\Systray\\AzureArcSysTray.exe"
+                             }
+                         ],
+        "Category":  "?? ??"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "This computer is not domain-joined. Domain controller time sync check is not applicable.",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-63",
+        "Result":  "Not Applicable"
+    },
+    {
+        "Category":  "?? ??",
+        "Details":  "Windows Firewall is enabled on all profiles (Domain: Enabled, Private: Enabled, Public: Enabled).",
+        "Timestamp":  "2026-04-15 21:48:35",
+        "CheckItem":  "W-64",
+        "Result":  "Good"
+    }
+]

@@ -25,7 +25,7 @@ function Test-W54 {
         foreach ($check in $checks) {
             $value = (Get-ItemProperty -Path $regPath -Name $check.Name -ErrorAction SilentlyContinue).($check.Name)
             if ($null -eq $value -or $value -notin $check.Required) {
-                $issues += "$($check.Name)=$($value ?? 'Not Set') ($($check.Desc))"
+                $issues += "$($check.Name)=$(if ($null -ne $value) { $value } else { 'Not Set' }) ($($check.Desc))"
             }
         }
 

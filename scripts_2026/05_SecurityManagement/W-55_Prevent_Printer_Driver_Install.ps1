@@ -21,7 +21,7 @@ function Test-W55 {
             $result.Details = "Users are prevented from installing printer drivers (AddPrinterDrivers: 1)."
         } else {
             $result.Result  = "Vulnerable"
-            $result.Details = "Users may install printer drivers (AddPrinterDrivers: $($value ?? 'Not Set'))."
+            $result.Details = "Users may install printer drivers (AddPrinterDrivers: $(if ($null -ne $value) { $value } else { 'Not Set' }))."
         }
     }
     catch {

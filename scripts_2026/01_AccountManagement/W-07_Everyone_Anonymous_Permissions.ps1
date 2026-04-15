@@ -19,7 +19,7 @@ function Test-W07 {
             $value = (Get-ItemProperty -Path $regPath -Name $propName -ErrorAction SilentlyContinue).$propName
 
             if ($null -eq $value -or $value -eq 0) {
-                $result.Details = "Everyone permissions do not include anonymous users (EveryoneIncludesAnonymous: $($value ?? 'Not Set'))."
+                $result.Details = "Everyone permissions do not include anonymous users (EveryoneIncludesAnonymous: $(if ($null -ne $value) { $value } else { 'Not Set' }))."
             } else {
                 $result.Result  = "Vulnerable"
                 $result.Details = "Everyone permissions include anonymous users (EveryoneIncludesAnonymous: $value)."

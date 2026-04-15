@@ -17,7 +17,7 @@ function Test-W61 {
 
         foreach ($disk in $disks) {
             if ($disk.FileSystem -ne "NTFS") {
-                $nonNtfs += "$($disk.DeviceID) ($($disk.FileSystem ?? 'Unknown'))"
+                $nonNtfs += "$($disk.DeviceID) ($(if ($null -ne $disk.FileSystem) { $disk.FileSystem } else { 'Unknown' }))"
             }
         }
 

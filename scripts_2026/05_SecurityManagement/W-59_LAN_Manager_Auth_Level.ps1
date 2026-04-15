@@ -20,7 +20,7 @@ function Test-W59 {
 
         if ($null -eq $value -or $value -lt $minLevel) {
             $result.Result  = "Vulnerable"
-            $result.Details = "LAN Manager authentication level is $($value ?? 'Not Set') (Required: >= $minLevel for NTLMv2)."
+            $result.Details = "LAN Manager authentication level is $(if ($null -ne $value) { $value } else { 'Not Set' }) (Required: >= $minLevel for NTLMv2)."
         } else {
             $result.Details = "LAN Manager authentication level is $value (NTLMv2 or higher)."
         }

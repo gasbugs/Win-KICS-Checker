@@ -18,7 +18,7 @@ function Test-W50 {
         $value = (Get-ItemProperty -Path $regPath -Name $propName -ErrorAction SilentlyContinue).$propName
 
         if ($null -eq $value -or $value -eq 0) {
-            $result.Details = "CrashOnAuditFail is disabled (Value: $($value ?? 'Not Set')). System will not shut down on audit failure."
+            $result.Details = "CrashOnAuditFail is disabled (Value: $(if ($null -ne $value) { $value } else { 'Not Set' })). System will not shut down on audit failure."
         } else {
             $result.Result  = "Vulnerable"
             $result.Details = "CrashOnAuditFail is enabled (Value: $value). System may shut down unexpectedly."

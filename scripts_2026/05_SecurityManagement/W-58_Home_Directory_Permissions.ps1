@@ -23,7 +23,7 @@ function Test-W58 {
             $acl = Get-Acl $path -ErrorAction SilentlyContinue
             foreach ($ace in $acl.Access) {
                 if ($ace.IdentityReference.Value -eq 'Everyone') {
-                    $issues += "$path: Everyone has $($ace.FileSystemRights)"
+                    $issues += "${path}: Everyone has $($ace.FileSystemRights)"
                 }
             }
         }

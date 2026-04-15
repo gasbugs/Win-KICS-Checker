@@ -18,7 +18,7 @@ function Test-W52 {
         $value = (Get-ItemProperty -Path $regPath -Name $propName -ErrorAction SilentlyContinue).$propName
 
         if ($null -eq $value -or $value -eq "0") {
-            $result.Details = "Autologon is disabled (AutoAdminLogon: $($value ?? 'Not Set'))."
+            $result.Details = "Autologon is disabled (AutoAdminLogon: $(if ($null -ne $value) { $value } else { 'Not Set' }))."
         } else {
             $result.Result  = "Vulnerable"
             $result.Details = "Autologon is enabled (AutoAdminLogon: $value). Disable for security."

@@ -1,0 +1,82 @@
+# claude-progress.txt — Win-KICS-Checker
+# ============================================================
+# 추가 전용 세션 로그 — 이전 항목을 편집하거나 삭제하지 마세요
+# ============================================================
+
+=== SESSION 0 — 템플릿 ===
+Agent: 템플릿
+Goal: 이것은 형식 참조입니다. 새 세션마다 이 블록을 복사하세요.
+Completed:
+  - (항목을 대시-공백 접두사로 나열)
+Blocked:
+  - 없음
+Test Results:
+  (실제 테스트 출력 붙여넣기)
+Next Session Must:
+  - (구체적인 지시 1)
+  - 다음 기능 진행: feat-001
+=== END SESSION 0 ===
+
+=== SESSION 1 — 2026-04-15 ===
+Agent: Initializer
+Goal: 2026 KICS 표준 마이그레이션 — 64개 스크립트 생성 및 리팩토링
+Completed:
+  - 하네스 설치 (feature-list.json, init.sh, tests/e2e/)
+  - feature-list.json에 2026 표준 64개 항목(W-01~W-64) 등록
+  - 2021→2026 매핑 테이블 작성 (플랜 파일에 기록)
+  - 계정 관리 스크립트 14개 작성 (W-01~W-14)
+  - 서비스 관리 스크립트 23개 작성 (W-15~W-37)
+  - 패치 관리 스크립트 2개 작성 (W-38~W-39)
+  - 로그 관리 스크립트 4개 작성 (W-40~W-43)
+  - 보안 관리 스크립트 21개 작성 (W-44~W-64)
+  - 신규 항목 6개 구현: W-15(개인키암호), W-41(NTP), W-43(로그접근통제), W-56(SMB세션), W-63(도메인시간동기화), W-64(윈도우방화벽)
+  - W-09 통합 항목 구현 (구 W-48,49,50,51,55 비밀번호 정책 통합)
+  - 모든 스크립트를 function-wrapped 패턴으로 통일
+  - Category를 한글로 통일 (계정 관리, 서비스 관리, 패치 관리, 로그 관리, 보안 관리)
+  - ConvertTo-Json -Depth 4로 출력 형식 통일
+  - run_all_diag_local_2026.ps1 실행 스크립트 작성
+Blocked:
+  - 없음
+Test Results:
+  init.sh 실행 결과:
+    Expected: 64
+    Created:  64
+    Remaining: 0
+    SMOKE: feature-list.json is valid JSON ✓
+  (Windows 실환경 E2E 테스트는 GCloud spot instance에서 별도 진행 필요)
+Next Session Must:
+  - GCloud Windows Server spot instance에서 64개 스크립트 실행 테스트
+  - 테스트 통과 후 feature-list.json의 passes를 true로 업데이트
+  - run_all_diag_remote_2026.ps1 원격 실행 스크립트 작성
+  - git 커밋 생성
+=== END SESSION 1 ===
+
+=== SESSION 2 — 2026-04-15 ===
+Agent: Coding
+Goal: GCloud Windows Server 실환경 E2E 테스트 실행 및 리포트 생성
+Completed:
+  - GCloud Windows Server 2022 spot instance (win-kics-test-2026, asia-northeast3-a) 생성 확인
+  - WinRM 방화벽 규칙(allow-winrm-5985) 생성 및 연결 성공
+  - pywinrm 기반 원격 실행기(run_remote_test.py) 작성
+    - certutil -decode 방식으로 파일 업로드 (cmd-line 길이 제한 우회)
+    - UTF-8 BOM 추가 (PS 5.1 한글 인코딩 호환)
+  - PS 5.1 호환성 수정: ?? null-coalescing 연산자 → PS 5.1 문법으로 교체 (8개 파일)
+  - W-58의 $path: 변수 참조 오류 수정 → ${path}: 로 교체
+  - 64개 전체 스크립트 실행 성공 (Total 64/64, Error 0)
+  - run_all_diag_remote_2026.ps1 작성 (Windows-to-Windows PSRemoting 방식)
+  - feature-list.json 64개 항목 passes=true 업데이트
+Blocked:
+  - 없음
+Test Results:
+  GCloud Windows Server 2022 (WIN-KICS-TEST-2, 34.22.96.68) 실행 결과:
+    Vulnerable                : 19
+    Good                      : 28
+    Manual Check Required     : 7
+    Not Applicable            : 10
+    Error                     : 0
+    Total Checks              : 64 / 64
+  리포트: reports/diagnostic_2026_report_remote_WIN-KICS-TEST-2.json
+Next Session Must:
+  - GCloud VM 삭제 (gcloud compute instances delete win-kics-test-2026)
+  - 필요시 추가 E2E 테스트
+=== END SESSION 2 ===

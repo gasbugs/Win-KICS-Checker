@@ -22,7 +22,7 @@ function Test-W53 {
             $result.Details = "Removable media format/eject is restricted to Administrators only (allocateDASD: 0)."
         } else {
             $result.Result  = "Vulnerable"
-            $result.Details = "Removable media format/eject is not restricted to Administrators (allocateDASD: $($value ?? 'Not Set'))."
+            $result.Details = "Removable media format/eject is not restricted to Administrators (allocateDASD: $(if ($null -ne $value) { $value } else { 'Not Set' }))."
         }
     }
     catch {
