@@ -79,3 +79,99 @@ Remove-Variable pw
 ## 7. 라이선스 및 참고 자료
 - 라이선스 정보는 `license.md`를 확인하세요.
 - 점검 항목 상세 설명은 `docs/Windows_Vulnerability_Guide.txt`에서 확인할 수 있습니다.
+
+---
+
+# 2026 KICS 표준 (64개 항목)
+
+## 8. 2026 표준 개요
+
+`scripts_2026/` 디렉터리에는 2026 KICS 표준 기반 64개 진단 스크립트가 있습니다.
+macOS/Linux에서 `run_remote_test.py`(pywinrm 기반)로 실행하거나,
+Windows 관리 서버에서 `run_all_diag_remote_2026.ps1`(PSRemoting 기반)로 실행합니다.
+
+```
+scripts_2026/
+├── 01_AccountManagement/   W-01~W-14
+├── 02_ServiceManagement/   W-15~W-37
+├── 03_PatchManagement/     W-38~W-39
+├── 04_LogManagement/       W-40~W-43
+└── 05_SecurityManagement/  W-44~W-64
+```
+
+## 9. GCloud 테스트 환경 (Terraform)
+
+### 9.1 VM 생성
+
+```bash
+cd terraform
+cp terraform.tfvars.example terraform.tfvars   # 필요시 값 수정
+terraform init
+terraform apply
+```
+
+생성 리소스:
+- Windows Server 2022 Spot VM (`n2-standard-4`, `asia-northeast3-a`)
+- WinRM 방화벽 규칙 (TCP 5985, 5986)
+
+### 9.2 비밀번호 획득
+
+VM 부팅 후 약 2~3분 대기 후 실행:
+
+```bash
+gcloud compute reset-windows-password win-kics-test-2026 \
+  --project=claude-code-malware \
+  --zone=asia-northeast3-a \
+  --user=kicstest --quiet
+# → ip_address / password 출력됨
+```
+
+`terraform output get_password_command` 로도 명령어 확인 가능.
+
+### 9.3 진단 실행
+
+**macOS/Linux (pywinrm):**
+
+```bash
+pip3 install pywinrm
+
+# 기본 진단 (서비스 미설치 상태)
+python3 run_remote_test.py --ip <IP> --user kicstest --pass '<PW>'
+
+# FTP/DNS/SNMP 환경 구성 후 진단 (N/A 항목도 테스트)
+python3 run_remote_test.py --ip <IP> --user kicstest --pass '<PW>' --setup
+```
+
+**Windows 관리 서버 (PSRemoting):**
+
+```powershell
+$cred = Get-Credential
+.\run_all_diag_remote_2026.ps1 -TargetComputer <IP> -Credential $cred
+```
+
+### 9.4 결과 확인
+
+```
+reports/
+├── diagnostic_2026_report_remote_<HOSTNAME>.json       # 기본 진단
+└── diagnostic_2026_report_remote_<HOSTNAME>_svc.json   # 서비스 환경 포함
+```
+
+### 9.5 VM 삭제
+
+```bash
+terraform destroy
+```
+
+---
+
+## 10. N/A 항목 안내
+
+| 항목 | 조건 | --setup 플래그 |
+|------|------|----------------|
+| W-22~24 | FTP 서비스 미설치 | ✅ 설치됨 |
+| W-25, W-32 | DNS 서비스 미설치 | ✅ 설치됨 |
+| W-29~31 | SNMP 서비스 미설치 | ✅ 설치됨 |
+| W-33 | HTTP/FTP/SMTP 전부 없음 | ✅ FTP로 대체 |
+| W-26 | Windows 2008+에서 항상 N/A | ❌ 레거시 전용 항목 |
+| W-63 | 도메인 미가입 | ❌ AD DS 구축 필요 |
